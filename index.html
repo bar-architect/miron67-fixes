@@ -169,7 +169,7 @@ body.detail .filters,body.detail .send{display:none}
   </div>
 </header>
 
-<main class="wrap">
+<main class="wrap" style="padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))">
   <div id="listView">
   <div class="intro" id="intro">
     <b>איך עובדים עם הרשימה</b>
@@ -184,17 +184,6 @@ body.detail .filters,body.detail .send{display:none}
   <div id="zones"></div>
   </div>
   <div id="detail" hidden></div>
-  <div class="send">
-    <button class="btn" id="sendBtn">שלח עדכון לוועד בווטסאפ</button>
-    <div class="sheet" id="sheet" hidden>
-      <small>הסימונים נשמרים בטלפון הזה. כדי שהוועד יראה אותם, שולחים את ההודעה:</small>
-      <textarea id="msg" readonly aria-label="נוסח העדכון"></textarea>
-      <div class="row">
-        <a class="btn" id="waLink" href="#" target="_blank" rel="noopener">פתח בווטסאפ</a>
-        <button class="btn" id="copyBtn">העתק</button>
-      </div>
-    </div>
-  </div>
 </main>
 
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="תמונה מהדוח">
@@ -462,30 +451,7 @@ $("#lbStage").addEventListener("touchstart", e => { tx = e.touches[0].clientX; }
 $("#lbStage").addEventListener("touchend", e => { if (tx === null) return; const dx = e.changedTouches[0].clientX - tx; tx = null;
   if (Math.abs(dx) > 50) (dx < 0 ? $("#lbNext") : $("#lbPrev")).click(); });
 
-// whatsapp summary
-function summary() {
-  const all = DATA.items.filter(i => pr(i.id) !== "skip"), by = s => all.filter(i => st(i.id) === s);
-  const d = by("done"), p = by("issue");
-  const today = new Date().toLocaleDateString("he-IL");
-  let t = `עדכון תיקונים – מירון 67 (${today})\nבוצעו ${d.length} מתוך ${all.length}. נשארו ${all.length - d.length}.\n`;
-  if (d.length) t += `\n✅ בוצע:\n` + d.map(i => `${i.id} ${i.title}`).join("\n") + "\n";
-  if (p.length) t += `\n⚠️ יש בעיה:\n` + p.map(i => `${i.id} ${i.title}${state[i.id].note ? " – " + state[i.id].note : ""}`).join("\n") + "\n";
-  return t;
-}
-$("#sendBtn").onclick = () => {
-  const t = summary(); $("#msg").value = t;
-  $("#waLink").href = "https://wa.me/?text=" + encodeURIComponent(t);
-  $("#sheet").hidden = false; $("#sheet").scrollIntoView({behavior: "smooth", block: "end"});
-};
-$("#copyBtn").onclick = async () => {
-  try { await navigator.clipboard.writeText($("#msg").value); $("#copyBtn").textContent = "הועתק ✓"; }
-  catch (e) { $("#msg").select(); $("#copyBtn").textContent = "סמן והעתק"; }
-};
 
-if (live) {
-  document.querySelector("#sheet small").textContent = "הוועד כבר רואה את הסימונים שלך אוטומטית. אפשר לשלוח גם סיכום בווטסאפ:";
-  $("#sendBtn").textContent = "שלח סיכום לוועד בווטסאפ";
-}
 try { if (localStorage.getItem(KEY + "-intro")) $("#intro").hidden = true; } catch (e) {}
 $("#introOk").onclick = () => { $("#intro").hidden = true; try { localStorage.setItem(KEY + "-intro", "1"); } catch (e) {} };
 window.addEventListener("hashchange", route);
