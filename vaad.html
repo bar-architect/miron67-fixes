@@ -1,0 +1,335 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style></head><body><title>מירון 67 – מבט ועד</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: committee overview — sticky summary + filters, compact one-line rows grouped by trade or by place; tap a row to open details and set priority. */
+:root{
+  --bg:#eef0ee; --surface:#ffffff; --ink:#1d2321; --muted:#5d6763; --line:#d5dad7;
+  --mark:#e39a2d; --mark-ink:#7a4a05; --mark-soft:#fbeed8;
+  --done:#2f7d4f; --done-soft:#e1f0e6; --issue:#b83a2e; --issue-soft:#f8e2df;
+  --chip:#e4e8e6; --skip:#8a938f;
+  --f-body:"IBM Plex Sans Hebrew",system-ui,"Segoe UI",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141817; --surface:#1e2422; --ink:#e8ecea; --muted:#9aa5a0; --line:#323a37;
+  --mark:#efa93f; --mark-ink:#f6c77c; --mark-soft:#3a2c14;
+  --done:#5cbf83; --done-soft:#17301f; --issue:#ef7a6c; --issue-soft:#3b1d19; --chip:#2a312e; --skip:#6f7975; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141817; --surface:#1e2422; --ink:#e8ecea; --muted:#9aa5a0; --line:#323a37;
+  --mark:#efa93f; --mark-ink:#f6c77c; --mark-soft:#3a2c14;
+  --done:#5cbf83; --done-soft:#17301f; --issue:#ef7a6c; --issue-soft:#3b1d19; --chip:#2a312e; --skip:#6f7975; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45;direction:rtl;margin:0;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px))}
+button,select,textarea,input{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation}
+:focus-visible{outline:3px solid var(--mark);outline-offset:2px}
+
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+header .wrap{padding-block:8px;display:grid;gap:7px}
+.top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+h1{font-size:16px;margin:0}
+.sync{font-size:12px;color:var(--muted)}
+.sync[data-s="ok"]{color:var(--done)} .sync[data-s="err"]{color:var(--issue)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.stat{background:var(--bg);border-radius:8px;padding:4px 6px;text-align:center;border:0;min-width:0}
+.stat b{display:block;font-size:17px;font-variant-numeric:tabular-nums;line-height:1.2}
+.stat span{font-size:11px;color:var(--muted);white-space:nowrap}
+.stat.d b{color:var(--done)} .stat.i b{color:var(--issue)} .stat.w b{color:var(--mark-ink)}
+.bar{height:6px;border-radius:3px;background:var(--chip);overflow:hidden;display:flex}
+.bar i{display:block;height:100%} .bar .d{background:var(--done)} .bar .p{background:var(--issue)}
+.tools{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:1px}
+.tools::-webkit-scrollbar{display:none}
+.f{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 11px;font-size:12.5px;white-space:nowrap;min-height:32px}
+.f[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex:none}
+.seg button{border:0;background:var(--surface);padding:3px 10px;font-size:12.5px;min-height:30px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+
+.gate,.tip{margin-top:10px;border-radius:10px;padding:10px 12px;font-size:13.5px;display:grid;gap:8px}
+.gate{background:var(--issue-soft)}
+.gate .row{display:flex;gap:6px}
+.gate input{flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface);font-size:16px;direction:ltr;text-align:left}
+.gate button,.tip button{border:0;background:var(--ink);color:var(--surface);border-radius:8px;padding:8px 14px;font-weight:700;font-size:14px}
+.tip{background:var(--mark-soft)}
+.tip ul{margin:0;padding-inline-start:18px;display:grid;gap:2px}
+.tip button{justify-self:start;padding:5px 12px;font-size:13px}
+
+.group{margin-top:14px}
+.ghead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:0 2px 6px}
+.ghead h2{margin:0;font-size:15px}
+.ghead span{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ln{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:6px 6px 6px 10px;border-top:1px solid var(--line)}
+.main{border:0;background:none;padding:2px 0;text-align:right;cursor:pointer}
+.item:first-child .ln{border-top:0}
+.dot{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none;border:2px solid var(--line);color:transparent}
+.dot.done{background:var(--done);border-color:var(--done);color:#fff}
+.dot.issue{background:var(--issue);border-color:var(--issue);color:#fff}
+.dot.skip{background:var(--chip);border-color:var(--skip);color:var(--skip)}
+.main{min-width:0;display:grid;gap:1px}
+.t{font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sub{font-size:11.5px;color:var(--muted);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.sub .id{font-family:var(--f-mono);direction:ltr}
+.tag{border-radius:5px;padding:0 6px;font-size:11px;font-weight:700}
+.tag.first{background:var(--mark-soft);color:var(--mark-ink)}
+.tag.low{background:var(--chip);color:var(--muted)}
+.tag.wait{background:var(--done-soft);color:var(--done)}
+.tag.ok{background:var(--done);color:#fff}
+.tag.hot{background:var(--issue-soft);color:var(--issue)}
+.item.skip .t{text-decoration:line-through;color:var(--muted)}
+.star{border:0;background:none;width:40px;height:40px;border-radius:50%;font-size:21px;line-height:1;color:var(--line);display:grid;place-items:center}
+.star[aria-pressed="true"]{color:var(--mark)}
+.detail{padding:4px 12px 12px;display:grid;gap:9px;background:var(--bg);border-top:1px dashed var(--line)}
+.detail .lbl{font-size:12px;color:var(--muted);font-weight:700}
+.detail ol{margin:0;padding-inline-start:18px;display:grid;gap:2px;font-size:13.5px}
+.cnote{background:var(--issue-soft);border-radius:8px;padding:6px 10px;font-size:13.5px}
+.photos{display:flex;gap:6px;overflow-x:auto}
+.photos button{flex:none;border:0;padding:0;border-radius:6px;overflow:hidden;width:84px;height:63px;background:var(--chip)}
+.photos img{width:100%;height:100%;object-fit:cover;display:block}
+.prio{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.prio button{border:0;border-inline-start:1px solid var(--line);background:none;padding:8px 2px;font-size:13px;min-height:40px}
+.prio button:first-child{border-inline-start:0}
+.prio button[aria-pressed="true"][data-p="first"]{background:var(--mark);color:#1d2321;font-weight:700}
+.prio button[aria-pressed="true"][data-p="normal"]{background:var(--ink);color:var(--surface);font-weight:700}
+.prio button[aria-pressed="true"][data-p="low"]{background:var(--chip);font-weight:700;box-shadow:inset 0 0 0 2px var(--muted)}
+.prio button[aria-pressed="true"][data-p="skip"]{background:var(--skip);color:#fff;font-weight:700}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.acts button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 12px;font-size:13px;min-height:38px}
+.acts .approve{border-color:var(--done);color:var(--done);font-weight:700}
+.acts .approve[aria-pressed="true"]{background:var(--done);color:#fff}
+.vn{display:flex;gap:6px}
+.vn textarea{flex:1;min-width:0;min-height:40px;border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--surface);font-size:16px;resize:vertical}
+.vn button{border:0;background:var(--ink);color:var(--surface);border-radius:8px;padding:0 12px;font-size:13px;font-weight:700}
+.empty{padding:24px 0;text-align:center;color:var(--muted)}
+.foot{color:var(--muted);font-size:12px;text-align:center;padding:18px 0 calc(18px + env(safe-area-inset-bottom,0px))}
+.foot a{color:inherit}
+.toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:8px 14px;border-radius:999px;font-size:13px;z-index:30;max-width:calc(100% - 32px)}
+.lb{position:fixed;inset:0;z-index:20;background:rgba(10,12,11,.96);display:grid;grid-template-rows:auto 1fr auto;color:#fff}
+.lb .lbtop{display:flex;justify-content:space-between;align-items:center;padding:calc(8px + env(safe-area-inset-top,0px)) 14px 8px;font-size:13px}
+.lb .x{background:rgba(255,255,255,.14);border:0;color:#fff;border-radius:999px;width:40px;height:40px;font-size:18px}
+.lb .stage{display:grid;place-items:center;overflow:hidden}
+.lb img{max-width:100%;max-height:100%;object-fit:contain}
+.lb .nav{display:flex;gap:10px;padding:8px 14px calc(12px + env(safe-area-inset-bottom,0px))}
+.lb .nav button{flex:1;min-height:44px;border-radius:10px;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:15px}
+.lb .nav button:disabled{opacity:.3}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="top"><h1>מירון 67 · מבט ועד</h1><span class="sync" id="sync">טוען…</span></div>
+    <div class="stats" id="stats"></div>
+    <div class="bar" aria-hidden="true"><i class="d" id="barD"></i><i class="p" id="barP"></i></div>
+    <div class="tools" role="group" aria-label="סינון">
+      <span class="seg" role="group" aria-label="קיבוץ">
+        <button data-g="trade" aria-pressed="true">לפי מקצוע</button><button data-g="zone" aria-pressed="false">לפי מקום</button>
+      </span>
+      <button class="f" data-f="all" aria-pressed="true">הכל</button>
+      <button class="f" data-f="open" aria-pressed="false">נשאר</button>
+      <button class="f" data-f="wait" aria-pressed="false">לאישורך</button>
+      <button class="f" data-f="issue" aria-pressed="false">יש בעיה</button>
+      <button class="f" data-f="first" aria-pressed="false">⭐ קודם</button>
+      <button class="f" data-f="skip" aria-pressed="false">ויתרתי</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="gate" id="gate" hidden>
+    <b>כדי לסמן עדיפויות ולאשר, הזן את קוד הוועד (פעם אחת בטלפון הזה)</b>
+    <div class="row"><input id="keyIn" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="קוד ועד" aria-label="קוד ועד"><button id="keyBtn">אישור</button></div>
+  </div>
+  <div class="tip" id="tip">
+    <b>איך מכוונים את הקבלן</b>
+    <ul>
+      <li><b>⭐</b> ליד ליקוי = הקבלן יראה אותו ראשון, בראש הרשימה שלו.</li>
+      <li>לוחצים על שורה כדי לפתוח פרטים: <b>נמוך</b> = יופיע אצלו בסוף, <b>ויתור</b> = יורד מהרשימה שלו לגמרי.</li>
+      <li>כשהקבלן מסמן "בוצע", הליקוי מופיע ב<b>לאישורך</b>. בודקים בשטח ומאשרים, או מחזירים אליו עם הערה.</li>
+    </ul>
+    <button id="tipOk">הבנתי</button>
+  </div>
+  <div id="groups"></div>
+  <div class="foot">הקבלן רואה את השינויים שלך תוך דקה. <a href="./">מעבר למסך של הקבלן</a></div>
+</main>
+
+<div class="toast" id="toast" hidden></div>
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="תמונה מהדוח">
+  <div class="lbtop"><span id="lbCap"></span><button class="x" id="lbX" aria-label="סגור">✕</button></div>
+  <div class="stage" id="lbStage"><img id="lbImg" alt=""></div>
+  <div class="nav"><button id="lbNext">הבאה ›</button><button id="lbPrev">‹ הקודמת</button></div>
+</div>
+
+<script>
+const DATA = {"zones": [{"k": "roofU", "name": "גג עליון"}, {"k": "roofL", "name": "גג תחתון"}, {"k": "f3", "name": "קומה 3"}, {"k": "f2", "name": "קומה 2"}, {"k": "f1", "name": "קומה 1"}, {"k": "lobby", "name": "לובי כניסה (קרקע)"}, {"k": "trash", "name": "חדר אשפה"}, {"k": "out", "name": "חוץ ופיתוח"}], "items": [{"id": "3.1", "zone": "roofU", "where": "סביב צנרת שחודרת את הגג", "trade": "איטום", "urgent": 0, "title": "ליבון תפרים ביריעות סביב קוביות ההגבהה", "steps": ["לבצע ליבון תפרים במפגש בין יריעות האיטום על קוביות ההגבהה."], "page": 7, "photos": ["3_1_1.jpg", "3_1_2.jpg", "3_1_3.jpg", "3_1_4.jpg", "3_1_5.jpg", "3_1_6.jpg"]}, {"id": "3.2", "zone": "roofU", "where": "מתחת לקוביות ההגבהה", "trade": "איטום", "urgent": 0, "title": "יריעת הגנה מתחת לקוביות ההגבהה", "steps": ["להניח יריעת הגנה בין קוביות ההגבהה (בטון) לבין יריעות האיטום."], "page": 9, "photos": ["3_2_1.jpg", "3_2_2.jpg"]}, {"id": "3.3", "zone": "roofU", "where": "צנרת שחודרת ברצפה ובמעקה", "trade": "איטום", "urgent": 0, "title": "פרט איטום לצנרת שחודרת לגג ולמעקה", "steps": ["צנרת שעוברת ברצפת הגג: לבצע פרט \"מקל סבא\" מלא, ולעטוף את הזוויות בסרט חיזוק.", "צנרת שעוברת במעקה: להתקין שרוול בקוטר 2\" לפחות מעל שכבת האיטום, מוטה כלפי הגג ב-45°."], "page": 10, "photos": ["3_3_1.jpg", "3_3_2.jpg", "3_3_3.jpg", "3_3_4.jpg", "3_3_5.jpg", "3_3_6.jpg", "3_3_7.jpg", "3_3_8.jpg", "3_3_9.jpg", "3_3_10.jpg", "3_3_11.jpg", "3_3_12.jpg", "3_3_13.jpg", "3_3_14.jpg", "3_3_15.jpg"]}, {"id": "3.4", "zone": "roofU", "where": "סביב רפפות הברזל, מול הקיר", "trade": "איטום", "urgent": 1, "title": "איטום סביב רפפות הברזל (יש חדירת מים!)", "steps": ["לאטום סביב הרפפות בחומר גמיש עמיד UV.", "אחרי האיטום: שפכטל וצבע לקיר שנפגע מהרטיבות בתוך הבניין."], "page": 18, "photos": ["3_4_1.jpg", "3_4_2.jpg", "3_4_3.jpg", "3_4_4.jpg", "3_4_5.jpg", "3_4_6.jpg", "3_4_7.jpg", "3_4_8.jpg"]}, {"id": "3.5", "zone": "roofU", "where": "במקומות המסומנים בתמונות", "trade": "איטום", "urgent": 1, "title": "יריעות איטום מנותקות", "steps": ["לתקן ולהלחים את היריעות במקומות המסומנים."], "page": 21, "photos": ["3_5_1.jpg", "3_5_2.jpg", "3_5_3.jpg", "3_5_4.jpg", "3_5_5.jpg"]}, {"id": "3.6", "zone": "roofU", "where": "חומה מזרחית וחומה דרומית", "trade": "איטום", "urgent": 0, "title": "סרגל קיבוע בהיקף הגג", "steps": ["לחזק את סרגל (פרופיל) הקיבוע בכל היקף הגג, במקומות שהתנתק.", "למרוח חומר גמיש במפגש בין הסרגל לקיר."], "page": 25, "photos": ["3_6_1.jpg", "3_6_2.jpg", "3_6_3.jpg", "3_6_4.jpg", "3_6_5.jpg", "3_6_6.jpg", "3_6_7.jpg", "3_6_8.jpg"]}, {"id": "3.7", "zone": "roofU", "where": "נקז ליד רפפות הברזל", "trade": "איטום", "urgent": 1, "title": "נקז הגג גבוה וצר מדי", "steps": ["להרחיב את פתח הנקז, כך שהוא יהיה הנקודה הנמוכה ביותר מסביבו.", "להדביק היטב את היריעות סביב הנקז.", "להתקין רשת או מחסום עלים."], "page": 27, "photos": ["3_7_1.jpg", "3_7_2.jpg", "3_7_3.jpg", "3_7_4.jpg"]}, {"id": "4.1", "zone": "roofU", "where": "על פני הגג", "trade": "חשמל", "urgent": 0, "title": "כבלי חשמל מפוזרים על הגג", "steps": ["להעביר את כל כבלי החשמל בתעלה (תעלת רשת או פח), ולהרים אותם מהאיטום."], "page": 42, "photos": ["4_1_1.jpg", "4_1_2.jpg"]}, {"id": "5.1", "zone": "roofU", "where": "בהיקף חומת הגג", "trade": "איטום", "urgent": 0, "title": "קופינג: קיבוע והשלמה", "steps": ["לקבע מכנית את אבני הקופינג: קידוח, בורג עיגון ופקק תואם.", "להשלים קופינג בקצה החומה בצד מזרח ובצד צפון, לכל האורך."], "page": 46, "photos": ["5_1_1.jpg", "5_1_2.jpg", "5_1_3.jpg", "5_1_4.jpg", "5_1_5.jpg", "5_1_6.jpg", "5_1_7.jpg", "5_1_8.jpg", "5_1_9.jpg", "5_1_10.jpg", "5_1_11.jpg", "5_1_12.jpg"]}, {"id": "6.1", "zone": "roofU", "where": "צנרת מים חמים על הגג", "trade": "אינסטלציה", "urgent": 0, "title": "בידוד לצנרת מים חמים", "steps": ["להשלים בידוד תרמי לכל צנרת המים החמים."], "page": 53, "photos": ["6_1_1.jpg", "6_1_2.jpg"]}, {"id": "6.2", "zone": "roofU", "where": "קולטן ביוב", "trade": "אינסטלציה", "urgent": 0, "title": "פסולת בניין בתוך קולטן הביוב", "steps": ["לנקות את קולטן הביוב מהפסולת.", "למסור לוועד: האם בוצע צינור מעקף, ותוכנית \"כפי שבוצע\" (AS MADE) של המעקפים."], "page": 54, "photos": ["6_2_1.jpg", "6_2_2.jpg"]}, {"id": "7.1", "zone": "roofU", "where": "על משטח האיטום", "trade": "ניקיון", "urgent": 0, "title": "ניקוי פסולת מהגג", "steps": ["לפנות מהגג את כל פסולת הבנייה ושאריות ההתקנות."], "page": 59, "photos": ["7_1_1.jpg", "7_1_2.jpg"]}, {"id": "3.8", "zone": "roofL", "where": "בהיקף הגג", "trade": "איטום", "urgent": 0, "title": "סרגל קיבוע בהיקף הגג", "steps": ["לחזק את סרגל הקיבוע בכל היקף הגג.", "למרוח חומר גמיש במפגש בין הסרגל לקיר."], "page": 29, "photos": ["3_8_1.jpg", "3_8_2.jpg", "3_8_3.jpg", "3_8_4.jpg", "3_8_5.jpg", "3_8_6.jpg", "3_8_7.jpg", "3_8_8.jpg"]}, {"id": "3.9", "zone": "roofL", "where": "צנרת שחודרת ברצפה ובמעקה", "trade": "איטום", "urgent": 0, "title": "פרט איטום לצנרת שחודרת לגג ולמעקה", "steps": ["צנרת שעוברת ברצפת הגג: לבצע פרט \"מקל סבא\" מלא, ולעטוף את הזוויות בסרט חיזוק.", "צנרת שעוברת במעקה: להתקין שרוול בקוטר 2\" לפחות מעל שכבת האיטום, מוטה כלפי הגג ב-45°."], "page": 31, "photos": ["3_9_1.jpg", "3_9_2.jpg", "3_9_3.jpg", "3_9_4.jpg", "3_9_5.jpg", "3_9_6.jpg", "3_9_7.jpg", "3_9_8.jpg", "3_9_9.jpg"]}, {"id": "3.10", "zone": "roofL", "where": "מתחת לקוביות ההגבהה", "trade": "איטום", "urgent": 0, "title": "יריעת הגנה מתחת לקוביות ההגבהה", "steps": ["להניח יריעת הגנה בין קוביות ההגבהה לבין יריעות האיטום."], "page": 36, "photos": ["3_10_1.jpg", "3_10_2.jpg", "3_10_3.jpg", "3_10_4.jpg", "3_10_5.jpg", "3_10_6.jpg"]}, {"id": "3.11", "zone": "roofL", "where": "נקזי הגג", "trade": "איטום", "urgent": 0, "title": "רשתות לנקזי הגג", "steps": ["להתקין מחסום עלים (רשת) בכל נקזי הגג."], "page": 39, "photos": ["3_11_1.jpg", "3_11_2.jpg"]}, {"id": "3.12", "zone": "roofL", "where": "במקומות המסומנים בתמונות", "trade": "איטום", "urgent": 1, "title": "יריעות איטום מנותקות", "steps": ["לתקן ולהלחים את היריעות במקומות המסומנים."], "page": 41, "photos": ["3_12_1.jpg", "3_12_2.jpg"]}, {"id": "4.2", "zone": "roofL", "where": "על פני הגג", "trade": "חשמל", "urgent": 0, "title": "כבלי חשמל מפוזרים על הגג", "steps": ["להעביר את כל כבלי החשמל בתעלה (תעלת רשת או פח), ולהרים אותם מהאיטום."], "page": 43, "photos": ["4_2_1.jpg", "4_2_2.jpg"]}, {"id": "4.3", "zone": "roofL", "where": "קופסת חיבורים של מערכת סחרור המים", "trade": "חשמל", "urgent": 0, "title": "כיסוי לקופסת חיבורים חשופה למים", "steps": ["להתקין כיסוי או הגנה קבועה לקופסת החיבורים, נגד חדירת מים."], "page": 44, "photos": ["4_3_1.jpg", "4_3_2.jpg"]}, {"id": "5.2", "zone": "roofL", "where": "בהיקף חומת הגג (מעל הפנטהאוס)", "trade": "איטום", "urgent": 0, "title": "קופינג: קיבוע, החלפה והשלמה", "steps": ["לקבע מכנית את אבני הקופינג: קידוח, בורג עיגון ופקק תואם.", "להחליף את אבן הקופינג השבורה בחומה הדרומית, ליד הפינה המערבית.", "להשלים קופינג בקצה החומה בצד צפון, לכל האורך."], "page": 50, "photos": ["5_2_1.jpg", "5_2_2.jpg", "5_2_3.jpg", "5_2_4.jpg", "5_2_5.jpg", "5_2_6.jpg", "5_2_7.jpg", "5_2_8.jpg", "5_2_9.jpg"]}, {"id": "7.2", "zone": "roofL", "where": "על משטח האיטום", "trade": "ניקיון", "urgent": 0, "title": "ניקוי פסולת מהגג", "steps": ["לפנות מהגג את שאריות חומרי הבנייה."], "page": 60, "photos": ["7_2_1.jpg"]}, {"id": "6.3", "zone": "f3", "where": "לובי קומה 3", "trade": "אינסטלציה", "urgent": 0, "title": "שרוול לצנרת שעוברת בבטון", "steps": ["לחצוב סביב הצינור שעובר בשלד.", "לצקת סביבו שרוול, כדי שאפשר יהיה לטפל בצינור בעתיד."], "page": 55, "photos": ["6_3_1.jpg", "6_3_2.jpg"]}, {"id": "8.1", "zone": "f3", "where": "ארון מוני המים, לובי קומה 3", "trade": "איטום", "urgent": 0, "title": "איטום רצפת ארון מוני המים", "steps": ["לבצע רולקות (העגלות) בין הרצפה לקירות.", "למרוח חומר איטום ב-2 שכבות.", "להתקין רשת ומחסום ריח בנקז."], "page": 61, "photos": ["8_1_1.jpg", "8_1_2.jpg", "8_1_3.jpg", "8_1_4.jpg", "8_1_5.jpg", "8_1_6.jpg"]}, {"id": "9.1", "zone": "f3", "where": "חיפוי בלובי קומה 3", "trade": "ריצוף", "urgent": 0, "title": "אריחי חיפוי פגומים", "steps": ["להחליף את האריחים הפגומים באריחים מאותה סדרה."], "page": 72, "photos": ["9_1_1.jpg", "9_1_2.jpg", "9_1_3.jpg", "9_1_4.jpg"]}, {"id": "9.2", "zone": "f3", "where": "סביב המעלית, קומה 3", "trade": "ריצוף", "urgent": 0, "title": "סיליקון סביב המעלית + כתמים על הנירוסטה", "steps": ["למלא חומר גמיש במפגש בין הלבשת המעלית לחיפוי.", "כתמי החמצון על הנירוסטה: להזמין חברת ניקיון שמתמחה בנירוסטה."], "page": 74, "photos": ["9_2_1.jpg", "9_2_2.jpg", "9_2_3.jpg", "9_2_4.jpg", "9_2_5.jpg", "9_2_6.jpg"]}, {"id": "9.3", "zone": "f3", "where": "ליד הדלת לחדר המדרגות, קומה 3", "trade": "ניקיון", "urgent": 0, "title": "כתמי צבע על הריצוף והחיפוי", "steps": ["לנקות את שאריות הצבע מהריצוף ומהחיפוי."], "page": 77, "photos": ["9_3_1.jpg", "9_3_2.jpg", "9_3_3.jpg", "9_3_4.jpg"]}, {"id": "10.1", "zone": "f3", "where": "ריצוף לובי קומה 3 (אריחים מסומנים)", "trade": "ריצוף", "urgent": 0, "title": "הפרשי גובה בין אריחים", "steps": ["לפרק את האריחים המסומנים ולרצף מחדש במפלס אחיד."], "page": 110, "photos": ["10_1_1.jpg", "10_1_2.jpg", "10_1_3.jpg", "10_1_4.jpg", "10_1_5.jpg", "10_1_6.jpg", "10_1_7.jpg", "10_1_8.jpg"]}, {"id": "11.1", "zone": "f3", "where": "דלת הכניסה ללובי קומה 3", "trade": "צבע", "urgent": 0, "title": "שריטה וכתמים על הדלת", "steps": ["לבצע תיקון צבע נקודתי בדלת."], "page": 114, "photos": ["11_1_1.jpg", "11_1_2.jpg"]}, {"id": "11.2", "zone": "f3", "where": "דלת הכניסה ללובי קומה 3", "trade": "ריצוף", "urgent": 0, "title": "סיליקון בין המשקוף לריצוף", "steps": ["למלא חומר איטום גמיש במפגש בין המשקוף לריצוף."], "page": 115, "photos": ["11_2_1.jpg", "11_2_2.jpg"]}, {"id": "12.1", "zone": "f3", "where": "לובי קומה 3", "trade": "חשמל", "urgent": 0, "title": "ספוט תאורה לא עובד", "steps": ["לבדוק את החיבורים של הספוט. אם הוא לא תקין, להחליף בחדש."], "page": 121, "photos": ["12_1_1.jpg", "12_1_2.jpg"]}, {"id": "9.4", "zone": "f3", "where": "חדר מדרגות בין קומה 3 לקומה 2", "trade": "ריצוף", "urgent": 0, "title": "ריצוף מדרגות: גובה, רובה ומישקים", "steps": ["לפרק אריחים עם הפרשי גובה ולרצף מחדש במפלס אחיד.", "להשלים רובה במקומות שחסרה או מתפרקת.", "לחרוץ את המישקים לרוחב 3 מ\"מ לפחות."], "page": 79, "photos": ["9_4_1.jpg", "9_4_2.jpg", "9_4_3.jpg", "9_4_4.jpg", "9_4_5.jpg", "9_4_6.jpg", "9_4_7.jpg", "9_4_8.jpg", "9_4_9.jpg", "9_4_10.jpg"]}, {"id": "4.4", "zone": "f3", "where": "חדר מדרגות בין קומה 3 לקומה 2", "trade": "חשמל", "urgent": 0, "title": "לסגור את רצפת פיר החשמל", "steps": ["אחרי שכל הכבלים עוברים: לסגור את רצפת הפיר ואת כל המעברים הפתוחים."], "page": 45, "photos": ["4_4_1.jpg", "4_4_2.jpg"]}, {"id": "12.2", "zone": "f3", "where": "חדר מדרגות בין קומה 3 לקומה 2", "trade": "חשמל", "urgent": 1, "title": "גוף תאורה לא מקובע", "steps": ["לקבע את גוף התאורה לתקרה, באופן יציב."], "page": 122, "photos": ["12_2_1.jpg", "12_2_2.jpg"]}, {"id": "13.1", "zone": "f3", "where": "חדר מדרגות, בכניסה לקומה 3", "trade": "כללי", "urgent": 0, "title": "שלט קומה חסר", "steps": ["להתקין שלט מספר קומה בחדר המדרגות."], "page": 123, "photos": ["13_1_1.jpg"]}, {"id": "14.1", "zone": "f3", "where": "תקרה, חדר מדרגות בין קומה 3 לקומה 2", "trade": "צבע", "urgent": 0, "title": "גליות בטיח התקרה", "steps": ["לבצע שפכטל וצבע נקודתי באזור הלא ישר."], "page": 125, "photos": ["14_1_1.jpg", "14_1_2.jpg"]}, {"id": "14.2", "zone": "f3", "where": "ליד דלת הלובי של קומה 2 (בחדר המדרגות)", "trade": "צבע", "urgent": 0, "title": "פגיעה בטיח ליד הדלת", "steps": ["לבצע שפכטל וצבע, עד לגמר חלק ואחיד."], "page": 126, "photos": ["14_2_1.jpg", "14_2_2.jpg"]}, {"id": "6.4", "zone": "f2", "where": "לובי קומה 2", "trade": "אינסטלציה", "urgent": 0, "title": "שרוול לצנרת שעוברת בבטון", "steps": ["לחצוב סביב הצינור שעובר בשלד.", "לצקת סביבו שרוול, כדי שאפשר יהיה לטפל בצינור בעתיד."], "page": 57, "photos": ["6_4_1.jpg", "6_4_2.jpg"]}, {"id": "8.2", "zone": "f2", "where": "ארון מוני המים, לובי קומה 2", "trade": "איטום", "urgent": 0, "title": "איטום רצפת ארון מוני המים", "steps": ["לבצע רולקות (העגלות) בין הרצפה לקירות.", "למרוח חומר איטום ב-2 שכבות.", "להתקין רשת ומחסום ריח בנקז."], "page": 65, "photos": ["8_2_1.jpg", "8_2_2.jpg", "8_2_3.jpg", "8_2_4.jpg", "8_2_5.jpg", "8_2_6.jpg"]}, {"id": "9.5", "zone": "f2", "where": "לובי קומה 2", "trade": "ריצוף", "urgent": 0, "title": "אריחי חיפוי וריצוף פגומים", "steps": ["להחליף את האריחים הפגומים באריחים מאותה סדרה."], "page": 82, "photos": ["9_5_1.jpg", "9_5_2.jpg", "9_5_3.jpg", "9_5_4.jpg"]}, {"id": "9.6", "zone": "f2", "where": "לובי קומה 2", "trade": "ריצוף", "urgent": 0, "title": "רובה חסרה בריצוף", "steps": ["להשלים רובה בגוון תואם בכל המקומות שחסרה או מתפרקת."], "page": 84, "photos": ["9_6_1.jpg", "9_6_2.jpg", "9_6_3.jpg", "9_6_4.jpg", "9_6_5.jpg"]}, {"id": "15.1", "zone": "f2", "where": "דלת בלובי קומה 2", "trade": "צבע", "urgent": 0, "title": "פגיעות במשקוף הדלת + סיליקון לריצוף", "steps": ["לתקן את הפגיעות בשפכטל פחחים, לשייף ולצבוע את המשקוף.", "למלא חומר גמיש במפגש בין המזוזות לריצוף."], "page": 131, "photos": ["15_1_1.jpg", "15_1_2.jpg", "15_1_3.jpg", "15_1_4.jpg", "15_1_5.jpg", "15_1_6.jpg"]}, {"id": "16.1", "zone": "f2", "where": "סביב המעלית, קומה 2", "trade": "ניקיון", "urgent": 0, "title": "כתמי חמצון על הנירוסטה של המעלית", "steps": ["להזמין חברת ניקיון שמתמחה בנירוסטה, לטיפול בכתמים."], "page": 133, "photos": ["16_1_1.jpg", "16_1_2.jpg", "16_1_3.jpg"]}, {"id": "17.1", "zone": "f2", "where": "תקרת הלובי, ליד דירה 7", "trade": "צבע", "urgent": 0, "title": "פגיעות בתקרת הגבס", "steps": ["לבצע שפכטל וצבע נקודתי, עד לגמר חלק ואחיד."], "page": 136, "photos": ["17_1_1.jpg", "17_1_2.jpg"]}, {"id": "9.7", "zone": "f2", "where": "חדר מדרגות בין קומה 2 לקומה 1", "trade": "ריצוף", "urgent": 0, "title": "ריצוף מדרגות: גובה, רובה ומישקים", "steps": ["לפרק אריחים עם הפרשי גובה ולרצף מחדש במפלס אחיד.", "להשלים רובה במקומות שחסרה או מתפרקת.", "לחרוץ את המישקים לרוחב 3 מ\"מ לפחות."], "page": 86, "photos": ["9_7_1.jpg", "9_7_2.jpg", "9_7_3.jpg", "9_7_4.jpg", "9_7_5.jpg", "9_7_6.jpg", "9_7_7.jpg", "9_7_8.jpg", "9_7_9.jpg", "9_7_10.jpg", "9_7_11.jpg", "9_7_12.jpg"]}, {"id": "13.2", "zone": "f2", "where": "חדר מדרגות בין קומה 2 לקומה 1", "trade": "כללי", "urgent": 0, "title": "שלט קומה חסר", "steps": ["להתקין שלט מספר קומה בחדר המדרגות."], "page": 124, "photos": ["13_2_1.jpg"]}, {"id": "6.5", "zone": "f1", "where": "לובי קומה 1", "trade": "אינסטלציה", "urgent": 0, "title": "שרוול לצנרת שעוברת בבטון", "steps": ["לחצוב סביב הצינור שעובר בשלד.", "לצקת סביבו שרוול, כדי שאפשר יהיה לטפל בצינור בעתיד."], "page": 58, "photos": ["6_5_1.jpg", "6_5_2.jpg", "6_5_3.jpg", "6_5_4.jpg"]}, {"id": "8.3", "zone": "f1", "where": "ארון מוני המים, לובי קומה 1", "trade": "איטום", "urgent": 0, "title": "איטום רצפת ארון מוני המים", "steps": ["לבצע רולקות (העגלות) בין הרצפה לקירות.", "למרוח חומר איטום ב-2 שכבות.", "להתקין רשת ומחסום ריח בנקז."], "page": 67, "photos": ["8_3_1.jpg", "8_3_2.jpg", "8_3_3.jpg", "8_3_4.jpg"]}, {"id": "9.10", "zone": "f1", "where": "חיפוי בלובי קומה 1", "trade": "ריצוף", "urgent": 0, "title": "אריחי חיפוי פגומים", "steps": ["להחליף את האריחים הפגומים באריחים מאותה סדרה."], "page": 95, "photos": ["9_10_1.jpg", "9_10_2.jpg", "9_10_3.jpg", "9_10_4.jpg", "9_10_5.jpg"]}, {"id": "9.11", "zone": "f1", "where": "לובי קומה 1", "trade": "ריצוף", "urgent": 0, "title": "רובה חסרה בריצוף", "steps": ["להשלים רובה בכל המקומות שחסרה."], "page": 97, "photos": ["9_11_1.jpg", "9_11_2.jpg", "9_11_3.jpg", "9_11_4.jpg"]}, {"id": "11.3", "zone": "f1", "where": "דלת בלובי קומה 1", "trade": "ריצוף", "urgent": 0, "title": "סיליקון בין המזוזות לריצוף + כתמי צבע", "steps": ["למלא חומר גמיש במפגש בין המזוזות לריצוף.", "לנקות את כתמי הצבע מהריצוף ליד המשקוף."], "page": 116, "photos": ["11_3_1.jpg", "11_3_2.jpg", "11_3_3.jpg", "11_3_4.jpg"]}, {"id": "11.4", "zone": "f1", "where": "משקוף דלת בלובי קומה 1", "trade": "צבע", "urgent": 0, "title": "פגיעות וקילופי צבע במשקוף", "steps": ["לסגור את החורים בשפכטל פחחים, לשייף ולצבוע את המשקוף בגוון המקורי."], "page": 118, "photos": ["11_4_1.jpg"]}, {"id": "16.2", "zone": "f1", "where": "סביב המעלית, קומה 1", "trade": "ניקיון", "urgent": 0, "title": "כתמי חמצון על הנירוסטה של המעלית", "steps": ["להזמין חברת ניקיון שמתמחה בנירוסטה, לטיפול בכתמים."], "page": 135, "photos": ["16_2_1.jpg", "16_2_2.jpg", "16_2_3.jpg"]}, {"id": "9.9", "zone": "f1", "where": "חדר מדרגות בין קומה 1 לקרקע", "trade": "ריצוף", "urgent": 0, "title": "ריצוף מדרגות: גובה, רובה ומישקים", "steps": ["לפרק אריחים עם הפרשי גובה ולרצף מחדש במפלס אחיד.", "להשלים רובה במקומות שחסרה או מתפרקת.", "לחרוץ את המישקים לרוחב 3 מ\"מ לפחות."], "page": 91, "photos": ["9_9_1.jpg", "9_9_2.jpg", "9_9_3.jpg", "9_9_4.jpg", "9_9_5.jpg", "9_9_6.jpg", "9_9_7.jpg", "9_9_8.jpg", "9_9_9.jpg", "9_9_10.jpg", "9_9_11.jpg", "9_9_12.jpg", "9_9_13.jpg", "9_9_14.jpg", "9_9_15.jpg", "9_9_16.jpg"]}, {"id": "13.3", "zone": "f1", "where": "חדר מדרגות בין קומה 1 לקרקע", "trade": "כללי", "urgent": 0, "title": "שלט קומה חסר", "steps": ["להתקין שלט מספר קומה בחדר המדרגות."], "page": 124, "photos": ["13_3_1.jpg", "13_3_2.jpg"]}, {"id": "8.4", "zone": "lobby", "where": "קיר ליד ארון החשמל, בפינה", "trade": "איטום", "urgent": 1, "title": "רטיבות בתחתית הקיר", "steps": ["לפרק את אבני הריצוף שבחוץ, צמוד לבניין, עד לתחתית קורות המסד.", "לבדוק את האיטום ולתקן לפי מה שנמצא (לתאם עם הוועד).", "אחרי זה: לתקן את הטיח שהתנפח מעל הפנלים."], "page": 69, "photos": ["8_4_1.jpg", "8_4_2.jpg", "8_4_3.jpg"]}, {"id": "8.5", "zone": "lobby", "where": "נקז ארון מוני המים", "trade": "אינסטלציה", "urgent": 0, "title": "מחסום ריח חסר בנקז", "steps": ["להתקין מחסום ריח לנקז ארון המונים."], "page": 70, "photos": ["8_5_1.jpg", "8_5_2.jpg"]}, {"id": "8.6", "zone": "lobby", "where": "לובי הכניסה", "trade": "אינסטלציה", "urgent": 0, "title": "שרוול לצנרת שעוברת בבטון", "steps": ["לחצוב סביב הצינור שעובר בשלד.", "לצקת סביבו שרוול, כדי שאפשר יהיה לטפל בצינור בעתיד."], "page": 71, "photos": ["8_6_1.jpg", "8_6_2.jpg"]}, {"id": "9.12", "zone": "lobby", "where": "חיפוי הסרגלים, קיר ליד דירה 2", "trade": "נגרות", "urgent": 0, "title": "סיליקון וסוקל בתחתית חיפוי הסרגלים", "steps": ["למלא חומר גמיש במפגש בין לוח הגבס לריצוף.", "להשלים סוקל (או סרגלים) בתחתית חיפוי העץ.", "במקום שהקיר לא ישר: להתאים את קיבוע החיפוי."], "page": 98, "photos": ["9_12_1.jpg", "9_12_2.jpg", "9_12_3.jpg", "9_12_4.jpg", "9_12_5.jpg", "9_12_6.jpg", "9_12_7.jpg", "9_12_8.jpg", "9_12_9.jpg", "9_12_10.jpg"]}, {"id": "9.13", "zone": "lobby", "where": "אריח מסומן בלובי", "trade": "ריצוף", "urgent": 0, "title": "אריח חלול (נשמע ריק בנקישה)", "steps": ["להחליף את האריח החלול: להדביק מחדש בדבק כפול (גם על הרצפה וגם על גב האריח)."], "page": 101, "photos": ["9_13_1.jpg", "9_13_2.jpg"]}, {"id": "9.14", "zone": "lobby", "where": "אריחים מסומנים בלובי", "trade": "ריצוף", "urgent": 0, "title": "הפרשי גובה בין אריחים", "steps": ["לפרק את האריחים המסומנים ולרצף מחדש במפלס אחיד."], "page": 102, "photos": ["9_14_1.jpg", "9_14_2.jpg"]}, {"id": "9.15", "zone": "lobby", "where": "חיפוי קיר בלובי (אזורים מסומנים)", "trade": "ריצוף", "urgent": 0, "title": "חיפוי קיר לא ישר", "steps": ["לפרק את האזורים המסומנים ולהתקין מחדש, ישר."], "page": 103, "photos": ["9_15_1.jpg", "9_15_2.jpg", "9_15_3.jpg", "9_15_4.jpg"]}, {"id": "9.16", "zone": "lobby", "where": "מעבר בין שני סוגי ריצוף בלובי", "trade": "ריצוף", "urgent": 0, "title": "פס הפרדה בין סוגי ריצוף", "steps": ["להתקין פס אלומיניום (רוחב 3 מ\"מ, גובה 20–30 מ\"מ) בין סוגי הריצוף."], "page": 104, "photos": ["9_16_1.jpg", "9_16_2.jpg", "9_16_3.jpg", "9_16_4.jpg", "9_16_5.jpg"]}, {"id": "9.8", "zone": "lobby", "where": "משקופי המעלית (בכל הקומות)", "trade": "ריצוף", "urgent": 0, "title": "סיליקון בין הריצוף לנירוסטה של המעלית", "steps": ["למלא חומר איטום גמיש במפגש בין משקוף המעלית לריצוף ולחיפוי."], "page": 89, "photos": ["9_8_1.jpg", "9_8_2.jpg", "9_8_3.jpg", "9_8_4.jpg", "9_8_5.jpg"]}, {"id": "11.5", "zone": "lobby", "where": "דלת הכניסה הראשית", "trade": "צבע", "urgent": 0, "title": "סיליקון לריצוף + קילופי צבע במשקוף", "steps": ["לתקן את הפגיעות בשפכטל פחחים, לשייף ולצבוע את המשקוף.", "למלא חומר גמיש במפגש בין המזוזות לריצוף."], "page": 119, "photos": ["11_5_1.jpg", "11_5_2.jpg", "11_5_3.jpg", "11_5_4.jpg", "11_5_5.jpg"]}, {"id": "12.3", "zone": "lobby", "where": "ליד הכניסה הראשית ללובי", "trade": "חשמל", "urgent": 0, "title": "גוף תאורה דקורטיבי חסר", "steps": ["להתקין את גוף התאורה הדקורטיבי ליד הכניסה."], "page": 123, "photos": ["12_3_1.jpg"]}, {"id": "18.1", "zone": "lobby", "where": "הקיר המחופה, מול הקיר הירוק", "trade": "כללי", "urgent": 0, "title": "מראה גדולה חסרה", "steps": ["להתקין את המראה הגדולה בלובי."], "page": 137, "photos": ["18_1_1.jpg"]}, {"id": "19.1", "zone": "lobby", "where": "מסגרת החלון/דלת בכניסה (צד שמאל מבפנים)", "trade": "מסגרות", "urgent": 1, "title": "מסגרת האלומיניום זזה", "steps": ["לקבע היטב את מסגרת האלומיניום לרצפה, כך שלא תזוז."], "page": 138, "photos": ["19_1_1.jpg", "19_1_2.jpg", "19_1_3.jpg", "19_1_4.jpg"]}, {"id": "9.17", "zone": "trash", "where": "רצפת חדר האשפה", "trade": "ריצוף", "urgent": 0, "title": "שיפוע רצפה לא נכון לנקז", "steps": ["לפרק את האזורים עם שיפוע של פחות מ-1% לנקז ולרצף מחדש בשיפוע תקין.", "שימו לב: הרצפה נמוכה מהשביל שבחוץ, ולכן מים נכנסים מבחוץ."], "page": 106, "photos": ["9_17_1.jpg", "9_17_2.jpg", "9_17_3.jpg", "9_17_4.jpg", "9_17_5.jpg", "9_17_6.jpg", "9_17_7.jpg", "9_17_8.jpg", "9_17_9.jpg"]}, {"id": "9.18", "zone": "trash", "where": "כניסה לחדר האשפה", "trade": "ריצוף", "urgent": 0, "title": "פס הפרדה בין סוגי ריצוף", "steps": ["להתקין פס אלומיניום (רוחב 3 מ\"מ, גובה 20–30 מ\"מ) בין סוגי הריצוף."], "page": 109, "photos": ["9_18_1.jpg", "9_18_2.jpg", "9_18_3.jpg"]}, {"id": "10.2", "zone": "trash", "where": "רצפת חדר האשפה", "trade": "ריצוף", "urgent": 0, "title": "אריחים שבורים ורובה חסרה", "steps": ["להחליף את האריחים השבורים באריחים מאותה סדרה.", "להשלים רובה."], "page": 112, "photos": ["10_2_1.jpg", "10_2_2.jpg", "10_2_3.jpg", "10_2_4.jpg", "10_2_5.jpg", "10_2_6.jpg"]}, {"id": "14.4", "zone": "trash", "where": "תקרת חדר האשפה", "trade": "צבע", "urgent": 0, "title": "חורים בתקרה", "steps": ["לבצע שפכטל וצבע נקודתי."], "page": 130, "photos": ["14_4_1.jpg", "14_4_2.jpg"]}, {"id": "29.1", "zone": "trash", "where": "מעקה בחדר האשפה", "trade": "מסגרות", "urgent": 1, "title": "מעקה שבור", "steps": ["לתקן את המעקה ולצבוע."], "page": 165, "photos": ["29_1_1.jpg", "29_1_2.jpg"]}, {"id": "30.1", "zone": "trash", "where": "רכזת גילוי עשן", "trade": "כיבוי אש", "urgent": 1, "title": "גילוי עשן לא מחובר למערכת הכיבוי", "steps": ["לחבר את רכזת גילוי העשן לרגש הזרימה של מערכת הכיבוי (ספרינקלרים)."], "page": 166, "photos": ["30_1_1.jpg"]}, {"id": "24.1", "zone": "out", "where": "מדרגות הכניסה הראשיות לבניין", "trade": "פיתוח", "urgent": 1, "title": "מדרגות כניסה שקועות (סכנת מעידה)", "steps": ["לפרק את גרם המדרגות.", "למדוד מחדש ולבנות מדרגות בגובה ובשיפוע לפי התקנות (שיפוע עד 2%)."], "page": 151, "photos": ["24_1_1.jpg", "24_1_2.jpg", "24_1_3.jpg", "24_1_4.jpg", "24_1_5.jpg", "24_1_6.jpg", "24_1_7.jpg", "24_1_8.jpg", "24_1_9.jpg", "24_1_10.jpg"]}, {"id": "23.1", "zone": "out", "where": "ערוגות הגינה", "trade": "ניקיון", "urgent": 1, "title": "ברזלים בולטים מהערוגה (סכנה)", "steps": ["להסתובב בכל השטח שמסביב לבניין ולפנות ברזלים ושאריות בנייה."], "page": 149, "photos": ["23_1_1.jpg", "23_1_2.jpg", "23_1_3.jpg", "23_1_4.jpg", "23_1_5.jpg", "23_1_6.jpg", "23_1_7.jpg"]}, {"id": "28.1", "zone": "out", "where": "כניסה לבניין מהחניה", "trade": "פיתוח", "urgent": 0, "title": "מעצורי חניה חוסמים את הכניסה", "steps": ["לפרק את מעצורי החניה באזור המסומן, כדי לפתוח את המעבר לכניסה."], "page": 165, "photos": ["28_1_1.jpg", "28_1_2.jpg"]}, {"id": "6.6", "zone": "out", "where": "ליד חדר האשפה, בגינה", "trade": "אינסטלציה", "urgent": 0, "title": "צינור PVC חשוף לשמש", "steps": ["להחליף את הצינור הבולט בצינור HDPE."], "page": 59, "photos": ["6_6_1.jpg"]}, {"id": "14.3", "zone": "out", "where": "חזיתות: כניסה, צד צפון, חזית דרום", "trade": "צבע", "urgent": 0, "title": "הבדלי גוון בשליכט החיצוני", "steps": ["לצבוע את השליכט בצבע חיצוני גמיש (עמיד UV) בגוון שהוועד יבחר, לקבלת גוון אחיד."], "page": 127, "photos": ["14_3_1.jpg", "14_3_2.jpg", "14_3_3.jpg", "14_3_4.jpg", "14_3_5.jpg", "14_3_6.jpg", "14_3_7.jpg", "14_3_8.jpg", "14_3_9.jpg", "14_3_10.jpg"]}, {"id": "20.1", "zone": "out", "where": "אבני משתלבות מסביב לבניין", "trade": "פיתוח", "urgent": 0, "title": "אבנים משתלבות: חוסרים, שקיעות ושבורות", "steps": ["להשלים ריצוף באזורים החסרים.", "לתקן את התשתית באזורים ששקעו.", "למלא חול במישקים, ולמלא בטון דליל בין הקירות לאבנים.", "להחליף אבנים שבורות.", "לנקות עשבים מהמישקים, ליד החומה המזרחית."], "page": 139, "photos": ["20_1_1.jpg", "20_1_2.jpg", "20_1_3.jpg", "20_1_4.jpg", "20_1_5.jpg", "20_1_6.jpg", "20_1_7.jpg", "20_1_8.jpg", "20_1_9.jpg", "20_1_10.jpg", "20_1_11.jpg", "20_1_12.jpg", "20_1_13.jpg", "20_1_14.jpg", "20_1_15.jpg", "20_1_16.jpg", "20_1_17.jpg", "20_1_18.jpg", "20_1_19.jpg", "20_1_20.jpg", "20_1_21.jpg", "20_1_22.jpg", "20_1_23.jpg", "20_1_24.jpg", "20_1_25.jpg", "20_1_26.jpg", "20_1_27.jpg", "20_1_28.jpg"]}, {"id": "26.1", "zone": "out", "where": "חיפוי האבן וקופינג בחצר ובחניה", "trade": "פיתוח", "urgent": 0, "title": "חיפוי אבן: מישקים, אבנים פגומות, סדקים", "steps": ["להשלים כוחלה במישקים החסרים בחיפוי האבן.", "להחליף אבני קופינג שבורות או פגומות.", "להשלים רובה בין אבני הקופינג.", "לפרק את הבטון המתפרק סביב שוחות הביוב (פינה דרום-מערב) ולצקת מחדש בטון מזוין.", "להחליף את הבטון המאולתר באבן שפה או אבן פינה מתאימה.", "למלא מישק גמיש בפינה צפון-מזרח של החניה (יש סדק)."], "page": 155, "photos": ["26_1_1.jpg", "26_1_2.jpg", "26_1_3.jpg", "26_1_4.jpg", "26_1_5.jpg", "26_1_6.jpg", "26_1_7.jpg", "26_1_8.jpg", "26_1_9.jpg", "26_1_10.jpg", "26_1_11.jpg", "26_1_12.jpg", "26_1_13.jpg", "26_1_14.jpg", "26_1_15.jpg", "26_1_16.jpg", "26_1_17.jpg", "26_1_18.jpg", "26_1_19.jpg", "26_1_20.jpg", "26_1_21.jpg", "26_1_22.jpg", "26_1_23.jpg", "26_1_24.jpg", "26_1_25.jpg", "26_1_26.jpg", "26_1_27.jpg", "26_1_28.jpg", "26_1_29.jpg", "26_1_30.jpg", "26_1_31.jpg", "26_1_32.jpg", "26_1_33.jpg", "26_1_34.jpg", "26_1_35.jpg", "26_1_36.jpg", "26_1_37.jpg", "26_1_38.jpg", "26_1_39.jpg", "26_1_40.jpg", "26_1_41.jpg", "26_1_42.jpg", "26_1_43.jpg", "26_1_44.jpg", "26_1_45.jpg"]}, {"id": "27.1", "zone": "out", "where": "החומה המערבית (ליד השצ\"פ)", "trade": "פיתוח", "urgent": 0, "title": "החומה המערבית לא גמורה", "steps": ["להשלים גמר וחיפוי לכל אורך החומה המערבית."], "page": 164, "photos": ["27_1_1.jpg", "27_1_2.jpg", "27_1_3.jpg"]}, {"id": "21.1", "zone": "out", "where": "תיבות הדואר", "trade": "מסגרות", "urgent": 0, "title": "תיבות דואר לא מקובעות + צבע מתקלף", "steps": ["לקבע את ארון תיבות הדואר לקיר, באופן יציב.", "לבצע תיקוני צבע בגוון תואם."], "page": 147, "photos": ["21_1_1.jpg", "21_1_2.jpg", "21_1_3.jpg", "21_1_4.jpg"]}, {"id": "22.1", "zone": "out", "where": "פתח שחרור עשן, מימין לחדר האשפה (למעלה)", "trade": "מסגרות", "urgent": 0, "title": "רפפת ברזל חסרה", "steps": ["להתקין רפפת ברזל לסגירת פתח שחרור העשן."], "page": 148, "photos": ["22_1_1.jpg"]}, {"id": "25.1", "zone": "out", "where": "פילר מוני החשמל", "trade": "מסמך", "urgent": 0, "title": "הפילר מותקן עקום", "steps": ["למסור לוועד אישור חתום של קונסטרוקטור שהפילר יציב."], "page": 154, "photos": ["25_1_1.jpg"]}]};
+DATA.zoneName = Object.fromEntries(DATA.zones.map(z => [z.k, z.name]));
+const IMG = "img/";
+const SYNC_URL = "https://script.google.com/macros/s/AKfycbwJJ-Ejbe4_rFEGDzOstB0VXO3NyVEdtJ7H8ZK--VNzkAgNtTK0pgGONdoxB_gjwq6dAQ/exec";
+const KEY = "miron67-vaad-v1";
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const PN = { first: "⭐ קודם", normal: "רגיל", low: "נמוך", skip: "ויתור" };
+const RANK = { first: 0, normal: 1, low: 2, skip: 3 };
+let srv = {}, group = "trade", filter = "all", open = null, adminKey = "";
+const ls = { get(k) { try { return localStorage.getItem(KEY + k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(KEY + k, v); } catch (e) {} } };
+
+// committee code: from a one-time link (#k=...) or typed once; kept only on this phone
+(function () {
+  const m = location.hash.match(/k=([a-z0-9]+)/i);
+  if (m) { ls.set("-key", m[1]); history.replaceState(null, "", location.pathname); }
+  adminKey = ls.get("-key") || "";
+  if (ls.get("-tip")) $("#tip").hidden = true;
+  if (ls.get("-group")) group = ls.get("-group");
+})();
+
+const S = id => (srv[id] && srv[id].s) || "open";
+const P = id => (srv[id] && srv[id].p) || "normal";
+const OK = id => !!(srv[id] && srv[id].ok);
+
+function toast(t) { const el = $("#toast"); el.textContent = t; el.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => el.hidden = true, 2600); }
+function setSync(s, t) { const el = $("#sync"); el.dataset.s = s; el.textContent = t; }
+
+async function pull() {
+  try {
+    const j = await (await fetch(SYNC_URL + "?_=" + Date.now())).json();
+    if (!j.ok) throw 0;
+    srv = j.items || {};
+    setSync("ok", "✓ מעודכן " + new Date().toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" }));
+    render();
+  } catch (e) { setSync("err", "אין חיבור לגיליון"); }
+}
+async function send(id, patch, undo) {
+  if (!adminKey) { $("#gate").hidden = false; $("#gate").scrollIntoView({ behavior: "smooth" }); toast("צריך קוד ועד כדי לשנות"); undo(); render(); return; }
+  setSync("", "שומר…");
+  try {
+    const j = await (await fetch(SYNC_URL, { method: "POST", body: JSON.stringify(Object.assign({ admin: true, key: adminKey, id }, patch)) })).json();
+    if (!j.ok) {
+      if (j.error === "bad key") { adminKey = ""; ls.set("-key", ""); $("#gate").hidden = false; toast("קוד הוועד לא נכון"); }
+      else toast("השמירה נכשלה");
+      throw 0;
+    }
+    setSync("ok", "✓ נשמר");
+  } catch (e) { undo(); render(); setSync("err", "לא נשמר – נסה שוב"); }
+}
+function change(id, patch) {
+  const before = Object.assign({}, srv[id] || {});
+  srv[id] = Object.assign({}, srv[id] || {}, patch.p !== undefined ? { p: patch.p } : {}, patch.ok !== undefined ? { ok: patch.ok } : {}, patch.vnote !== undefined ? { vnote: patch.vnote } : {}, patch.reopen ? { s: "open", note: "", ok: false } : {});
+  render();
+  send(id, patch, () => { srv[id] = before; });
+}
+
+function matches(i) {
+  const s = S(i.id), p = P(i.id);
+  if (filter === "skip") return p === "skip";
+  if (filter !== "all" && p === "skip") return false;
+  if (filter === "open") return s !== "done";
+  if (filter === "wait") return s === "done" && !OK(i.id);
+  if (filter === "issue") return s === "issue";
+  if (filter === "first") return p === "first";
+  return true;
+}
+function rowHTML(i) {
+  const s = S(i.id), p = P(i.id), ok = OK(i.id), r = srv[i.id] || {};
+  const dot = p === "skip" ? '<span class="dot skip">–</span>' : s === "done" ? '<span class="dot done">✓</span>' : s === "issue" ? '<span class="dot issue">!</span>' : '<span class="dot"></span>';
+  const tags = [
+    p === "first" ? '<span class="tag first">⭐ קודם</span>' : "",
+    p === "low" ? '<span class="tag low">נמוך</span>' : "",
+    p === "skip" ? '<span class="tag low">ויתרתי</span>' : "",
+    s === "done" && !ok && p !== "skip" ? '<span class="tag wait">לאישורך</span>' : "",
+    s === "done" && ok ? '<span class="tag ok">אושר</span>' : "",
+    i.urgent && s !== "done" && p !== "skip" ? '<span class="tag hot">דחוף</span>' : ""
+  ].join("");
+  const sub = `<span class="id">${i.id}</span><span>${esc(group === "trade" ? DATA.zoneName[i.zone] : i.trade)}</span>${tags}`;
+  let det = "";
+  if (open === i.id) {
+    const ph = i.photos.slice(0, 6);
+    det = `<div class="detail">
+      <div class="lbl">📍 ${esc(i.where)} · עמ' ${i.page} בדוח</div>
+      <ol>${i.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
+      ${r.note ? `<div class="cnote"><b>הקבלן:</b> ${esc(r.note)}</div>` : ""}
+      ${ph.length ? `<div class="photos">${ph.map((f, n) => `<button data-lb="${i.id}" data-n="${n}" aria-label="תמונה ${n + 1}"><img loading="lazy" src="${IMG}${f}" alt=""></button>`).join("")}</div>` : ""}
+      <div class="lbl">עדיפות לקבלן</div>
+      <div class="prio" role="group" aria-label="עדיפות">${["first", "normal", "low", "skip"].map(k => `<button data-p="${k}" data-id="${i.id}" aria-pressed="${p === k}">${PN[k]}</button>`).join("")}</div>
+      ${s !== "open" ? `<div class="acts">
+        ${s === "done" ? `<button class="approve" data-act="ok" data-id="${i.id}" aria-pressed="${ok}">${ok ? "✓ אושר" : "אשר שבוצע"}</button>` : ""}
+        <button data-act="reopen" data-id="${i.id}">החזר לקבלן</button></div>` : ""}
+      <div class="lbl">הערה לקבלן (תופיע אצלו על הליקוי)</div>
+      <div class="vn"><textarea id="vn-${i.id.replace(".", "-")}" placeholder="למשל: להתחיל בזה לפני החורף">${esc(r.vnote || "")}</textarea><button data-act="vnote" data-id="${i.id}">שמור</button></div>
+    </div>`;
+  }
+  return `<div class="item${p === "skip" ? " skip" : ""}" id="r-${i.id.replace(".", "-")}">
+    <div class="ln">${dot}<button class="main" data-open="${i.id}" aria-expanded="${open === i.id}"><span class="t">${esc(i.title)}</span><span class="sub">${sub}</span></button>
+    <button class="star" data-star="${i.id}" aria-pressed="${p === "first"}" aria-label="${p === "first" ? "בטל עדיפות" : "סמן כקודם"}">${p === "first" ? "★" : "☆"}</button></div>${det}</div>`;
+}
+function render() {
+  const all = DATA.items, act = all.filter(i => P(i.id) !== "skip");
+  const done = act.filter(i => S(i.id) === "done").length, iss = act.filter(i => S(i.id) === "issue").length;
+  const wait = act.filter(i => S(i.id) === "done" && !OK(i.id)).length, skip = all.length - act.length;
+  $("#stats").innerHTML = `<div class="stat d"><b>${done}</b><span>בוצעו</span></div><div class="stat"><b>${act.length - done}</b><span>נשארו</span></div><div class="stat w"><b>${wait}</b><span>לאישורך</span></div><div class="stat i"><b>${iss}</b><span>יש בעיה</span></div>`;
+  $("#barD").style.width = (act.length ? done / act.length * 100 : 0) + "%";
+  $("#barP").style.width = (act.length ? iss / act.length * 100 : 0) + "%";
+  const keys = group === "trade" ? [...new Set(all.map(i => i.trade))].sort((a, b) => a.localeCompare(b, "he")) : DATA.zones.map(z => z.k);
+  let html = "";
+  for (const k of keys) {
+    const gi = all.filter(i => (group === "trade" ? i.trade : i.zone) === k);
+    const vis = gi.filter(matches).sort((a, b) => RANK[P(a.id)] - RANK[P(b.id)] || (b.urgent - a.urgent));
+    if (!vis.length) continue;
+    const ga = gi.filter(i => P(i.id) !== "skip"), gd = ga.filter(i => S(i.id) === "done").length;
+    html += `<section class="group"><div class="ghead"><h2>${esc(group === "trade" ? k : DATA.zoneName[k])}</h2><span>${gd}/${ga.length} בוצעו</span></div>
+      <div class="list">${vis.map(rowHTML).join("")}</div></section>`;
+  }
+  $("#groups").innerHTML = html || `<div class="empty">אין ליקויים במצב הזה.</div>`;
+}
+
+document.addEventListener("click", e => {
+  const g = e.target.closest("[data-g]");
+  if (g) { group = g.dataset.g; ls.set("-group", group); document.querySelectorAll("[data-g]").forEach(b => b.setAttribute("aria-pressed", b === g)); render(); return; }
+  const f = e.target.closest(".f[data-f]");
+  if (f) { filter = f.dataset.f; document.querySelectorAll(".f[data-f]").forEach(b => b.setAttribute("aria-pressed", b === f)); render(); return; }
+  const st = e.target.closest("[data-star]");
+  if (st) { const id = st.dataset.star; change(id, { p: P(id) === "first" ? "normal" : "first" }); return; }
+  const o = e.target.closest("[data-open]");
+  if (o) { open = open === o.dataset.open ? null : o.dataset.open; render(); return; }
+  const pb = e.target.closest(".prio [data-p]");
+  if (pb) { if (P(pb.dataset.id) !== pb.dataset.p) change(pb.dataset.id, { p: pb.dataset.p }); return; }
+  const a = e.target.closest("[data-act]");
+  if (a) {
+    const id = a.dataset.id;
+    if (a.dataset.act === "ok") change(id, { ok: !OK(id) });
+    if (a.dataset.act === "reopen") change(id, { reopen: true });
+    if (a.dataset.act === "vnote") { const v = document.getElementById("vn-" + id.replace(".", "-")).value.trim(); change(id, { vnote: v }); toast(v ? "ההערה תופיע אצל הקבלן" : "ההערה נמחקה"); }
+    return;
+  }
+  const p = e.target.closest("[data-lb]");
+  if (p) openLB(p.dataset.lb, +p.dataset.n);
+});
+$("#tipOk").onclick = () => { $("#tip").hidden = true; ls.set("-tip", "1"); };
+$("#keyBtn").onclick = async () => {
+  const k = $("#keyIn").value.trim().toLowerCase(); if (!k) return;
+  try {
+    const j = await (await fetch(SYNC_URL, { method: "POST", body: JSON.stringify({ admin: true, key: k, check: true }) })).json();
+    if (j.ok) { adminKey = k; ls.set("-key", k); $("#gate").hidden = true; toast("הקוד נשמר בטלפון הזה"); }
+    else toast("הקוד לא נכון");
+  } catch (e) { toast("אין חיבור – נסה שוב"); }
+};
+
+let lbItem = null, lbN = 0;
+function openLB(id, n) { lbItem = DATA.items.find(i => i.id === id); lbN = n; $("#lb").hidden = false; document.body.style.overflow = "hidden"; drawLB(); }
+function drawLB() { const ph = lbItem.photos; $("#lbImg").src = IMG + ph[lbN]; $("#lbCap").textContent = `${lbItem.id} · ${lbN + 1}/${ph.length}`; $("#lbPrev").disabled = lbN === 0; $("#lbNext").disabled = lbN === ph.length - 1; }
+function closeLB() { $("#lb").hidden = true; document.body.style.overflow = ""; }
+$("#lbX").onclick = closeLB;
+$("#lbPrev").onclick = () => { if (lbN > 0) { lbN--; drawLB(); } };
+$("#lbNext").onclick = () => { if (lbN < lbItem.photos.length - 1) { lbN++; drawLB(); } };
+document.addEventListener("keydown", e => { if (!$("#lb").hidden && e.key === "Escape") closeLB(); });
+
+if (!adminKey) $("#gate").hidden = false;
+render();
+pull();
+document.addEventListener("visibilitychange", () => { if (!document.hidden) pull(); });
+setInterval(pull, 60000);
+</script>
+</body></html>
