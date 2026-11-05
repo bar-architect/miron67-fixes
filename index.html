@@ -43,7 +43,7 @@ h1{font-size:16px;margin:0;font-weight:700;min-width:0}
 .vaad b{color:var(--mark-ink)}
 .okbadge{background:var(--done-soft);color:var(--done);border-radius:6px;padding:1px 8px;font-weight:700}
 .first .zhead h2{color:var(--mark-ink)}
-.first .list{border-inline-start:3px solid var(--mark);padding-inline-start:8px}
+.first .list{border-color:var(--mark);box-shadow:inset -3px 0 0 var(--mark)}
 .lowchip{background:var(--chip);color:var(--muted);border-radius:6px;padding:1px 8px}
 .firstchip{background:var(--mark-soft);color:var(--mark-ink);border-radius:6px;padding:1px 8px;font-weight:700}
 .skipnote{color:var(--muted);font-size:13px;text-align:center;margin-top:14px}
@@ -71,7 +71,35 @@ select.fbtn{appearance:none;padding-inline:14px 30px;background-image:linear-gra
 .chev{width:12px;height:12px;border-inline-start:2.5px solid var(--muted);border-bottom:2.5px solid var(--muted);transform:rotate(-45deg);transition:transform .2s;margin-top:-4px}
 .zone.closed .chev{transform:rotate(135deg);margin-top:4px}
 .zone.closed .list{display:none}
-.list{display:grid;gap:10px}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ln{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:9px 10px;border-top:1px solid var(--line);width:100%;background:none;border-inline:0;border-bottom:0;text-align:right;cursor:pointer}
+.ln:first-child{border-top:0}
+.ln:active{background:var(--bg)}
+.ln .dot{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;border:2px solid var(--line);color:transparent}
+.ln .dot.done{background:var(--done);border-color:var(--done);color:#fff}
+.ln .dot.issue{background:var(--issue);border-color:var(--issue);color:#fff}
+.ln .m{min-width:0;display:grid;gap:1px}
+.ln .t{font-size:14.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ln.isdone .t{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
+.ln .sub{font-size:11.5px;color:var(--muted);display:flex;gap:6px;align-items:center;overflow:hidden;white-space:nowrap}
+.ln .sub .w{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.ln .sub .id{font-family:var(--f-mono);direction:ltr;flex:none}
+.ln .tg{flex:none;border-radius:5px;padding:0 6px;font-size:11px;font-weight:700}
+.tg.first{background:var(--mark-soft);color:var(--mark-ink)} .tg.low{background:var(--chip);color:var(--muted)}
+.tg.hot{background:var(--issue-soft);color:var(--issue)} .tg.vn{background:var(--mark-soft);color:var(--mark-ink)} .tg.ok{background:var(--done-soft);color:var(--done)}
+.ln .go{color:var(--muted);font-size:22px;line-height:1;padding-inline-end:2px}
+.dbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 8px}
+.back{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:500;min-height:38px}
+.pos{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.plbl{font-size:12px;color:var(--muted);margin-top:4px}
+.dphotos{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.dphotos button{border:0;padding:0;border-radius:8px;overflow:hidden;aspect-ratio:4/3;background:var(--chip);max-width:100%}
+.dphotos img{width:100%;height:100%;object-fit:cover;display:block}
+.dnav{display:grid;grid-template-columns:auto 1fr;gap:8px;margin:12px 0 4px}
+.dnav .btn{min-height:46px;min-width:0}
+.dnav .next{background:var(--ink);color:var(--surface);border-color:var(--ink);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;display:block;line-height:46px;padding:0 12px}
+.dnav .prev{font-size:14px;font-weight:500;color:var(--muted);padding:0 14px}
+body.detail .filters,body.detail .send{display:none}
 
 /* card */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 12px 10px;display:grid;gap:7px}
@@ -149,17 +177,20 @@ select.fbtn{appearance:none;padding-inline:14px 30px;background-image:linear-gra
 </header>
 
 <main class="wrap">
+  <div id="listView">
   <div class="intro" id="intro">
     <b>איך עובדים עם הרשימה</b>
     <ol>
       <li>מתחילים ב<b>⭐ להתחיל כאן</b> – מה שהוועד ביקש קודם.</li>
       <li>אחר כך לפי מקום בבניין, מהגג ועד החצר.</li>
-      <li>לוחצים על תמונה כדי לראות בדיוק איפה הליקוי.</li>
-      <li>גמרת לתקן? לוחצים <b>✓ בוצע</b>. משהו תקוע? לוחצים <b>יש בעיה</b> וכותבים למה.</li>
+      <li>לוחצים על ליקוי כדי לראות מה לעשות, עם תמונות.</li>
+      <li>גמרת? <b>✓ בוצע</b> ואז <b>הבא בתור</b>. משהו תקוע? <b>יש בעיה</b> וכותבים למה.</li>
     </ol>
     <button class="ok" id="introOk">הבנתי</button>
   </div>
   <div id="zones"></div>
+  </div>
+  <div id="detail" hidden></div>
   <div class="send">
     <button class="btn" id="sendBtn">שלח עדכון לוועד בווטסאפ</button>
     <div class="sheet" id="sheet" hidden>
@@ -246,7 +277,7 @@ async function pull() {
       if (sv.s === "open") delete state[id];
       else state[id] = { s: sv.s, note: sv.note, t: sv.t };
     }
-    persist(); render();
+    persist(); refresh();
     if (Object.keys(pending).length) flush(); else setSync("ok");
   } catch (e) { setSync(Object.keys(pending).length ? "wait" : "offline"); }
 }
@@ -290,9 +321,9 @@ function visible(i) {
 
 function cardHTML(i) {
   const s = st(i.id), rec = state[i.id] || {};
-  const ph = i.photos, show = ph.slice(0, 4);
-  const photos = ph.length ? `<div class="photos">${show.map((p, n) =>
-    `<button data-lb="${i.id}" data-n="${n}" aria-label="תמונה ${n+1} מתוך ${ph.length}"><img loading="lazy" src="${IMG}${p}" alt="">${n === 3 && ph.length > 4 ? `<span class="more">+${ph.length - 4}</span>` : ""}</button>`).join("")}</div>` : "";
+  const ph = i.photos;
+  const photos = ph.length ? `<div class="dphotos">${ph.map((p, n) =>
+    `<button data-lb="${i.id}" data-n="${n}" aria-label="תמונה ${n+1} מתוך ${ph.length}"><img loading="lazy" src="${IMG}${p}" alt=""></button>`).join("")}</div>` : "";
   let bottom;
   if (s === "done") {
     bottom = `<div class="status done">✓ בוצע <span class="when">${fmt(rec.t)}</span><button class="undo" data-act="undo" data-id="${i.id}">ביטול</button></div>`;
@@ -308,15 +339,61 @@ function cardHTML(i) {
     ${vaad[i.id] && vaad[i.id].note ? `<div class="vaad"><b>הערת הוועד:</b> ${esc(vaad[i.id].note)}</div>` : ""}
     <div class="where">${pin}<span>${esc(i.where)}</span></div>
     <ol class="steps">${i.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
-    ${photos}${bottom}</article>`;
+    ${bottom}${photos ? `<div class="plbl">תמונות מהדוח (${ph.length}) – לחיצה מגדילה</div>` + photos : ""}</article>`;
 }
 
-function render() {
-  const skipped = DATA.items.filter(i => pr(i.id) === "skip").length;
+function rowHTML(i) {
+  const s = st(i.id), p = pr(i.id), v = vaad[i.id] || {};
+  const dot = s === "done" ? '<span class="dot done">✓</span>' : s === "issue" ? '<span class="dot issue">!</span>' : '<span class="dot"></span>';
+  const tags = (p === "first" && s !== "done" ? '<span class="tg first">⭐ קודם</span>' : "") + (p === "low" ? '<span class="tg low">נמוך</span>' : "") +
+    (i.urgent && s !== "done" ? '<span class="tg hot">דחוף</span>' : "") + (v.note ? '<span class="tg vn">הערת ועד</span>' : "") + (s === "done" && v.ok ? '<span class="tg ok">אושר</span>' : "");
+  return `<button class="ln${s === "done" ? " isdone" : ""}" data-open="${i.id}">${dot}<span class="m"><span class="t">${esc(i.title)}</span>
+    <span class="sub"><span class="id">${i.id}</span>${tags}<span class="w">${esc(i.where)}</span></span></span><span class="go" aria-hidden="true">‹</span></button>`;
+}
+// same order the list shows: "start here" first, then by place; inside each, committee priority then urgency
+function ordered() {
+  const all = DATA.items.filter(i => pr(i.id) !== "skip" && (!trade || i.trade === trade));
+  const out = [];
+  [{ k: "first" }].concat(DATA.zones).forEach(z => {
+    out.push(...all.filter(i => z.k === "first" ? pr(i.id) === "first" : i.zone === z.k && pr(i.id) !== "first")
+      .sort((a, b) => (RANK[pr(a.id)] - RANK[pr(b.id)]) || (b.urgent - a.urgent)));
+  });
+  return out;
+}
+let current = null;
+function openDetail(id) { location.hash = "d-" + id.replace(".", "-"); }
+function route() {
+  const m = location.hash.match(/^#d-(\d+)-(\d+)$/);
+  const id = m ? m[1] + "." + m[2] : null;
+  current = id && DATA.items.some(i => i.id === id) ? id : null;
+  document.body.classList.toggle("detail", !!current);
+  $("#listView").hidden = !!current; $("#detail").hidden = !current;
+  if (current) { renderDetail(); window.scrollTo(0, 0); }
+  else { render(); if (route.y) { window.scrollTo(0, route.y); route.y = 0; } }
+}
+function renderDetail() {
+  const i = DATA.items.find(x => x.id === current); if (!i) return;
+  header();
+  const list = ordered(), open = list.filter(x => st(x.id) !== "done");
+  const idx = list.findIndex(x => x.id === current);
+  const next = list.slice(idx + 1).find(x => st(x.id) !== "done") || open.find(x => x.id !== current);
+  const prev = idx > 0 ? list[idx - 1] : null;
+  $("#detail").innerHTML = `<div class="dbar"><button class="back" data-back>→ לרשימה</button><span class="pos">נשארו ${open.length} ליקויים</span></div>
+    ${cardHTML(i)}
+    <div class="dnav">${prev ? `<button class="btn prev" data-open="${prev.id}">‹ הקודם</button>` : "<span></span>"}${next ? `<button class="btn next" data-open="${next.id}">הבא בתור: ${esc(next.title)} ›</button>` : `<button class="btn next" data-back>✓ סיימת הכל – חזרה לרשימה</button>`}</div>`;
+}
+function refresh() { if (current) renderDetail(); else render(); }
+
+function header() {
   const all = DATA.items.filter(i => pr(i.id) !== "skip"), done = all.filter(i => st(i.id) === "done").length, iss = all.filter(i => st(i.id) === "issue").length;
   $("#count").innerHTML = `נשארו <b>${all.length - done}</b> מתוך ${all.length}`;
   $("#barD").style.width = (done / all.length * 100) + "%";
   $("#barP").style.width = (iss / all.length * 100) + "%";
+}
+function render() {
+  header();
+  const skipped = DATA.items.filter(i => pr(i.id) === "skip").length;
+  const all = DATA.items.filter(i => pr(i.id) !== "skip");
   let html = "", any = false;
   const zones = [{ k: "first", name: "⭐ להתחיל כאן" }].concat(DATA.zones);
   for (const z of zones) {
@@ -331,7 +408,7 @@ function render() {
     html += `<section class="zone${z.k === "first" ? " first" : ""}${closed[z.k] ? " closed" : ""}" data-z="${z.k}">
       <button class="zhead" data-zone="${z.k}" aria-expanded="${!closed[z.k]}"><h2>${z.name}</h2>
       <span class="zmeta">${left ? `נשארו ${left} מתוך ${zi.length}` : '<span class="ok">✓ הכל בוצע</span>'}<span class="chev"></span></span></button>
-      <div class="list">${vis.map(cardHTML).join("")}</div></section>`;
+      <div class="list">${vis.map(rowHTML).join("")}</div></section>`;
   }
   if (skipped) html += `<div class="skipnote">הוועד ויתר על ${skipped} ליקויים – הם לא מופיעים ברשימה.</div>`;
   if (!any) html = `<div class="empty">${filter === "open" ? "אין יותר ליקויים פתוחים. כל הכבוד!" : "אין ליקויים במצב הזה."}</div>` + (skipped ? `<div class="skipnote">הוועד ויתר על ${skipped} ליקויים.</div>` : "");
@@ -341,24 +418,27 @@ function render() {
 document.addEventListener("click", e => {
   const f = e.target.closest(".fbtn[data-f]");
   if (f) { filter = f.dataset.f; recent.clear(); document.querySelectorAll(".fbtn[data-f]").forEach(b => b.setAttribute("aria-pressed", b === f)); render(); return; }
+  const op = e.target.closest("[data-open]");
+  if (op) { if (!current) route.y = window.scrollY; openDetail(op.dataset.open); return; }
+  if (e.target.closest("[data-back]")) { location.hash = ""; return; }
   const zh = e.target.closest(".zhead");
   if (zh) { const k = zh.dataset.zone; closed[k] = !closed[k]; try { localStorage.setItem(KEY + "-closed", JSON.stringify(closed)); } catch (err) {} render(); return; }
   const a = e.target.closest("[data-act]");
   if (a) {
     const id = a.dataset.id, act = a.dataset.act;
-    if (act === "done") { state[id] = { s: "done", t: Date.now() }; recent.add(id); save(id); render(); }
-    else if (act === "undo") { delete state[id]; save(id); render(); }
+    if (act === "done") { state[id] = { s: "done", t: Date.now() }; recent.add(id); save(id); refresh(); }
+    else if (act === "undo") { delete state[id]; save(id); refresh(); }
     else if (act === "issue") { openNote(a.closest(".card"), id); }
     else if (act === "saveNote") {
       const txt = a.closest(".note").querySelector("textarea").value.trim();
-      state[id] = { s: "issue", t: Date.now(), note: txt }; save(id); render();
-    } else if (act === "cancelNote") { render(); }
+      state[id] = { s: "issue", t: Date.now(), note: txt }; save(id); refresh();
+    } else if (act === "cancelNote") { refresh(); }
     return;
   }
   const p = e.target.closest("[data-lb]");
   if (p) openLB(p.dataset.lb, +p.dataset.n);
 });
-$("#trade").addEventListener("change", e => { trade = e.target.value; render(); });
+$("#trade").addEventListener("change", e => { trade = e.target.value; refresh(); });
 
 function openNote(card, id) {
   const acts = card.querySelector(".actions");
@@ -413,7 +493,8 @@ if (live) {
 }
 try { if (localStorage.getItem(KEY + "-intro")) $("#intro").hidden = true; } catch (e) {}
 $("#introOk").onclick = () => { $("#intro").hidden = true; try { localStorage.setItem(KEY + "-intro", "1"); } catch (e) {} };
-render();
+window.addEventListener("hashchange", route);
+route();
 setSync(syncState);
 pull();
 </script>
