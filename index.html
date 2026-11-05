@@ -79,6 +79,9 @@ select.fbtn{appearance:none;padding-inline:14px 30px;background-image:linear-gra
 .ln .sub .id{font-family:var(--f-mono);direction:ltr;flex:none}
 .ln .tg{flex:none;border-radius:5px;padding:0 6px;font-size:11px;font-weight:700}
 .tg.first{background:var(--mark-soft);color:var(--mark-ink)} .tg.low{background:var(--chip);color:var(--muted)}
+.tg.sup{background:#e3ecf7;color:#1f4f8a}
+.supchip{background:#e3ecf7;color:#1f4f8a;border-radius:6px;padding:1px 8px;font-weight:700}
+.supnote{background:#e3ecf7;color:#1d2321;border-radius:8px;padding:6px 10px;font-size:14px}
 .tg.hot{background:var(--issue-soft);color:var(--issue)} .tg.vn{background:var(--mark-soft);color:var(--mark-ink)} .tg.ok{background:var(--done-soft);color:var(--done)}
 .ln .go{color:var(--muted);font-size:22px;line-height:1;padding-inline-end:2px}
 .dbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 8px}
@@ -254,7 +257,7 @@ async function pull() {
     }
     for (const id in items) {
       const sv = items[id];
-      vaad[id] = { ok: sv.ok, note: sv.vnote, p: sv.p || "normal", u: !!sv.u };
+      vaad[id] = { ok: sv.ok, note: sv.vnote, p: sv.p || "normal", u: !!sv.u, x: !!sv.x };
       if (pending[id]) continue; // our newer change is still on its way
       if (sv.s === "open") delete state[id];
       else state[id] = { s: sv.s, note: sv.note, t: sv.t };
@@ -294,6 +297,7 @@ function st(id) { return (state[id] && state[id].s) || "open"; }
 function pr(id) { return (vaad[id] && vaad[id].p) || "normal"; }
 const RANK = { first: 0, normal: 1, low: 2 };
 // urgent is set by the committee; until the sheet answers, fall back to the starting list
+function sup(i) { return !!(vaad[i.id] && vaad[i.id].x); }
 function urg(i) { const v = vaad[i.id]; return v && v.u !== undefined ? !!v.u : !!i.urgent; }
 function visible(i) {
   if (trade && i.trade !== trade) return false;
@@ -318,8 +322,9 @@ function cardHTML(i) {
     bottom = `<div class="actions"><button class="btn doneb" data-act="done" data-id="${i.id}">✓ בוצע</button><button class="btn issueb" data-act="issue" data-id="${i.id}">יש בעיה</button></div>`;
   }
   return `<article class="card${urg(i) ? " urgent" : ""}${s === "done" ? " isdone" : ""}" id="c-${i.id.replace(".", "-")}">
-    <div class="meta"><span class="id">${i.id}</span><span class="trade">${esc(i.trade)}</span>${pr(i.id) === "first" ? '<span class="firstchip">⭐ הוועד: קודם</span>' : ""}${pr(i.id) === "low" ? '<span class="lowchip">עדיפות נמוכה</span>' : ""}${urg(i) ? '<span class="hot">דחוף</span>' : ""}${s === "done" && vaad[i.id] && vaad[i.id].ok ? '<span class="okbadge">הוועד אישר ✓</span>' : ""}<span class="page">עמ' ${i.page} בדוח</span></div>
+    <div class="meta"><span class="id">${i.id}</span><span class="trade">${esc(i.trade)}</span>${pr(i.id) === "first" ? '<span class="firstchip">⭐ הוועד: קודם</span>' : ""}${pr(i.id) === "low" ? '<span class="lowchip">עדיפות נמוכה</span>' : ""}${urg(i) ? '<span class="hot">דחוף</span>' : ""}${sup(i) ? '<span class="supchip">🤝 תיאום ספק</span>' : ""}${s === "done" && vaad[i.id] && vaad[i.id].ok ? '<span class="okbadge">הוועד אישר ✓</span>' : ""}<span class="page">עמ' ${i.page} בדוח</span></div>
     <h3>${esc(i.title)}</h3>
+    ${sup(i) ? `<div class="supnote">🤝 <b>צריך לתאם עם ספק חיצוני.</b> זה לא תיקון שאתה עושה בעצמך – לתאם, לוודא שבוצע, ואז לסמן בוצע.</div>` : ""}
     ${vaad[i.id] && vaad[i.id].note ? `<div class="vaad"><b>הערת הוועד:</b> ${esc(vaad[i.id].note)}</div>` : ""}
     <div class="where">${pin}<span>${esc(i.where)}</span></div>
     <ol class="steps">${i.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
@@ -330,7 +335,7 @@ function rowHTML(i) {
   const s = st(i.id), p = pr(i.id), v = vaad[i.id] || {};
   const dot = s === "done" ? '<span class="dot done">✓</span>' : s === "issue" ? '<span class="dot issue">!</span>' : '<span class="dot"></span>';
   const tags = (p === "first" && s !== "done" ? '<span class="tg first">⭐ קודם</span>' : "") + (p === "low" ? '<span class="tg low">נמוך</span>' : "") +
-    (urg(i) && s !== "done" ? '<span class="tg hot">דחוף</span>' : "") + (v.note ? '<span class="tg vn">הערת ועד</span>' : "") + (s === "done" && v.ok ? '<span class="tg ok">אושר</span>' : "");
+    (urg(i) && s !== "done" ? '<span class="tg hot">דחוף</span>' : "") + (sup(i) && s !== "done" ? '<span class="tg sup">🤝 תיאום ספק</span>' : "") + (v.note ? '<span class="tg vn">הערת ועד</span>' : "") + (s === "done" && v.ok ? '<span class="tg ok">אושר</span>' : "");
   return `<button class="ln${s === "done" ? " isdone" : ""}" data-open="${i.id}">${dot}<span class="m"><span class="t">${esc(i.title)}</span>
     <span class="sub"><span class="id">${i.id}</span>${tags}<span class="w">${esc(i.where)}</span></span></span><span class="go" aria-hidden="true">‹</span></button>`;
 }

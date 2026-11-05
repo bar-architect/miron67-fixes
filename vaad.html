@@ -93,6 +93,9 @@ h1{font-size:16px;margin:0}
 .prio button[aria-pressed="true"][data-p="skip"]{background:var(--skip);color:#fff;font-weight:700}
 .urg{border:1px solid var(--issue);background:var(--surface);color:var(--issue);border-radius:8px;padding:7px 12px;font-size:13px;font-weight:700;min-height:38px;justify-self:start}
 .urg[aria-pressed="true"]{background:var(--issue);color:#fff}
+.supb{border:1px solid #1f4f8a;background:var(--surface);color:#1f4f8a;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:700;min-height:38px}
+.supb[aria-pressed="true"]{background:#1f4f8a;color:#fff}
+.tag.sup{background:#e3ecf7;color:#1f4f8a}
 .acts{display:flex;gap:6px;flex-wrap:wrap}
 .acts button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 12px;font-size:13px;min-height:38px}
 .acts .approve{border-color:var(--done);color:var(--done);font-weight:700}
@@ -130,6 +133,7 @@ h1{font-size:16px;margin:0}
       <button class="f" data-f="issue" aria-pressed="false">יש בעיה</button>
       <button class="f" data-f="first" aria-pressed="false">⭐ קודם</button>
       <button class="f" data-f="urgent" aria-pressed="false">🔴 דחוף</button>
+      <button class="f" data-f="sup" aria-pressed="false">🤝 ספק</button>
       <button class="f" data-f="skip" aria-pressed="false">ויתרתי</button>
     </div>
   </div>
@@ -144,7 +148,7 @@ h1{font-size:16px;margin:0}
     <b>איך מכוונים את הקבלן</b>
     <ul>
       <li><b>⭐</b> ליד ליקוי = הקבלן יראה אותו ראשון, בראש הרשימה שלו.</li>
-      <li>לוחצים על שורה כדי לפתוח פרטים: <b>סמן כדחוף</b> = תגית אדומה אצלו, <b>נמוך</b> = יופיע אצלו בסוף, <b>ויתור</b> = יורד מהרשימה שלו לגמרי.</li>
+      <li>לוחצים על שורה כדי לפתוח פרטים: <b>סמן כדחוף</b> = תגית אדומה אצלו, <b>🤝 תיאום עם ספק</b> = תזכורת שזה לא תיקון שלו בשטח, <b>נמוך</b> = יופיע אצלו בסוף, <b>ויתור</b> = יורד מהרשימה שלו לגמרי.</li>
       <li>כשהקבלן מסמן "בוצע", הליקוי מופיע ב<b>לאישורך</b>. בודקים בשטח ומאשרים, או מחזירים אליו עם הערה.</li>
     </ul>
     <button id="tipOk">הבנתי</button>
@@ -185,6 +189,7 @@ const ls = { get(k) { try { return localStorage.getItem(KEY + k); } catch (e) { 
 const S = id => (srv[id] && srv[id].s) || "open";
 const P = id => (srv[id] && srv[id].p) || "normal";
 const OK = id => !!(srv[id] && srv[id].ok);
+const SUP = i => !!(srv[i.id] && srv[i.id].x);
 const URG = i => { const v = srv[i.id]; return v && v.u !== undefined ? !!v.u : !!i.urgent; };
 
 function toast(t) { const el = $("#toast"); el.textContent = t; el.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => el.hidden = true, 2600); }
@@ -214,7 +219,7 @@ async function send(id, patch, undo) {
 }
 function change(id, patch) {
   const before = Object.assign({}, srv[id] || {});
-  srv[id] = Object.assign({}, srv[id] || {}, patch.p !== undefined ? { p: patch.p } : {}, patch.ok !== undefined ? { ok: patch.ok } : {}, patch.u !== undefined ? { u: patch.u } : {}, patch.vnote !== undefined ? { vnote: patch.vnote } : {}, patch.reopen ? { s: "open", note: "", ok: false } : {});
+  srv[id] = Object.assign({}, srv[id] || {}, patch.p !== undefined ? { p: patch.p } : {}, patch.ok !== undefined ? { ok: patch.ok } : {}, patch.u !== undefined ? { u: patch.u } : {}, patch.x !== undefined ? { x: patch.x } : {}, patch.vnote !== undefined ? { vnote: patch.vnote } : {}, patch.reopen ? { s: "open", note: "", ok: false } : {});
   render();
   send(id, patch, () => { srv[id] = before; });
 }
@@ -228,6 +233,7 @@ function matches(i) {
   if (filter === "issue") return s === "issue";
   if (filter === "first") return p === "first";
   if (filter === "urgent") return URG(i);
+  if (filter === "sup") return SUP(i);
   return true;
 }
 function rowHTML(i) {
@@ -239,7 +245,8 @@ function rowHTML(i) {
     p === "skip" ? '<span class="tag low">ויתרתי</span>' : "",
     s === "done" && !ok && p !== "skip" ? '<span class="tag wait">לאישורך</span>' : "",
     s === "done" && ok ? '<span class="tag ok">אושר</span>' : "",
-    URG(i) && s !== "done" && p !== "skip" ? '<span class="tag hot">דחוף</span>' : ""
+    URG(i) && s !== "done" && p !== "skip" ? '<span class="tag hot">דחוף</span>' : "",
+    SUP(i) && p !== "skip" ? '<span class="tag sup">🤝 ספק</span>' : ""
   ].join("");
   const sub = `<span class="id">${i.id}</span><span>${esc(group === "trade" ? DATA.zoneName[i.zone] : i.trade)}</span>${tags}`;
   let det = "";
@@ -251,7 +258,8 @@ function rowHTML(i) {
       ${r.note ? `<div class="cnote"><b>הקבלן:</b> ${esc(r.note)}</div>` : ""}
       ${ph.length ? `<div class="photos">${ph.map((f, n) => `<button data-lb="${i.id}" data-n="${n}" aria-label="תמונה ${n + 1}"><img loading="lazy" src="${IMG}${f}" alt=""></button>`).join("")}</div>` : ""}
       <div class="lbl">עדיפות לקבלן</div>
-      <button class="urg" data-act="urgent" data-id="${i.id}" aria-pressed="${URG(i)}">${URG(i) ? "🔴 מסומן דחוף – לחץ לביטול" : "סמן כדחוף"}</button>
+      <div class="acts"><button class="urg" data-act="urgent" data-id="${i.id}" aria-pressed="${URG(i)}">${URG(i) ? "🔴 מסומן דחוף – לחץ לביטול" : "סמן כדחוף"}</button>
+      <button class="supb" data-act="supplier" data-id="${i.id}" aria-pressed="${SUP(i)}">${SUP(i) ? "🤝 תיאום ספק – לחץ לביטול" : "🤝 צריך תיאום עם ספק"}</button></div>
       <div class="prio" role="group" aria-label="עדיפות">${["first", "normal", "low", "skip"].map(k => `<button data-p="${k}" data-id="${i.id}" aria-pressed="${p === k}">${PN[k]}</button>`).join("")}</div>
       ${s !== "open" ? `<div class="acts">
         ${s === "done" ? `<button class="approve" data-act="ok" data-id="${i.id}" aria-pressed="${ok}">${ok ? "✓ אושר" : "אשר שבוצע"}</button>` : ""}
@@ -299,6 +307,7 @@ document.addEventListener("click", e => {
   if (a) {
     const id = a.dataset.id;
     if (a.dataset.act === "ok") change(id, { ok: !OK(id) });
+    if (a.dataset.act === "supplier") { const it = DATA.items.find(x => x.id === id); change(id, { x: !SUP(it) }); }
     if (a.dataset.act === "urgent") { const it = DATA.items.find(x => x.id === id); change(id, { u: !URG(it) }); }
     if (a.dataset.act === "reopen") change(id, { reopen: true });
     if (a.dataset.act === "vnote") { const v = document.getElementById("vn-" + id.replace(".", "-")).value.trim(); change(id, { vnote: v }); toast(v ? "ההערה תופיע אצל הקבלן" : "ההערה נמחקה"); }
