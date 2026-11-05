@@ -265,7 +265,7 @@ async function pull() {
     }
     for (const id in items) {
       const sv = items[id];
-      vaad[id] = { ok: sv.ok, note: sv.vnote, p: sv.p || "normal" };
+      vaad[id] = { ok: sv.ok, note: sv.vnote, p: sv.p || "normal", u: !!sv.u };
       if (pending[id]) continue; // our newer change is still on its way
       if (sv.s === "open") delete state[id];
       else state[id] = { s: sv.s, note: sv.note, t: sv.t };
@@ -304,6 +304,8 @@ const fmt = t => { if (!t) return ""; const d = new Date(t); return d.toLocaleDa
 function st(id) { return (state[id] && state[id].s) || "open"; }
 function pr(id) { return (vaad[id] && vaad[id].p) || "normal"; }
 const RANK = { first: 0, normal: 1, low: 2 };
+// urgent is set by the committee; until the sheet answers, fall back to the starting list
+function urg(i) { const v = vaad[i.id]; return v && v.u !== undefined ? !!v.u : !!i.urgent; }
 function visible(i) {
   if (trade && i.trade !== trade) return false;
   const s = st(i.id);
@@ -326,8 +328,8 @@ function cardHTML(i) {
   } else {
     bottom = `<div class="actions"><button class="btn doneb" data-act="done" data-id="${i.id}">✓ בוצע</button><button class="btn issueb" data-act="issue" data-id="${i.id}">יש בעיה</button></div>`;
   }
-  return `<article class="card${i.urgent ? " urgent" : ""}${s === "done" ? " isdone" : ""}" id="c-${i.id.replace(".", "-")}">
-    <div class="meta"><span class="id">${i.id}</span><span class="trade">${esc(i.trade)}</span>${pr(i.id) === "first" ? '<span class="firstchip">⭐ הוועד: קודם</span>' : ""}${pr(i.id) === "low" ? '<span class="lowchip">עדיפות נמוכה</span>' : ""}${i.urgent ? '<span class="hot">דחוף</span>' : ""}${s === "done" && vaad[i.id] && vaad[i.id].ok ? '<span class="okbadge">הוועד אישר ✓</span>' : ""}<span class="page">עמ' ${i.page} בדוח</span></div>
+  return `<article class="card${urg(i) ? " urgent" : ""}${s === "done" ? " isdone" : ""}" id="c-${i.id.replace(".", "-")}">
+    <div class="meta"><span class="id">${i.id}</span><span class="trade">${esc(i.trade)}</span>${pr(i.id) === "first" ? '<span class="firstchip">⭐ הוועד: קודם</span>' : ""}${pr(i.id) === "low" ? '<span class="lowchip">עדיפות נמוכה</span>' : ""}${urg(i) ? '<span class="hot">דחוף</span>' : ""}${s === "done" && vaad[i.id] && vaad[i.id].ok ? '<span class="okbadge">הוועד אישר ✓</span>' : ""}<span class="page">עמ' ${i.page} בדוח</span></div>
     <h3>${esc(i.title)}</h3>
     ${vaad[i.id] && vaad[i.id].note ? `<div class="vaad"><b>הערת הוועד:</b> ${esc(vaad[i.id].note)}</div>` : ""}
     <div class="where">${pin}<span>${esc(i.where)}</span></div>
@@ -339,7 +341,7 @@ function rowHTML(i) {
   const s = st(i.id), p = pr(i.id), v = vaad[i.id] || {};
   const dot = s === "done" ? '<span class="dot done">✓</span>' : s === "issue" ? '<span class="dot issue">!</span>' : '<span class="dot"></span>';
   const tags = (p === "first" && s !== "done" ? '<span class="tg first">⭐ קודם</span>' : "") + (p === "low" ? '<span class="tg low">נמוך</span>' : "") +
-    (i.urgent && s !== "done" ? '<span class="tg hot">דחוף</span>' : "") + (v.note ? '<span class="tg vn">הערת ועד</span>' : "") + (s === "done" && v.ok ? '<span class="tg ok">אושר</span>' : "");
+    (urg(i) && s !== "done" ? '<span class="tg hot">דחוף</span>' : "") + (v.note ? '<span class="tg vn">הערת ועד</span>' : "") + (s === "done" && v.ok ? '<span class="tg ok">אושר</span>' : "");
   return `<button class="ln${s === "done" ? " isdone" : ""}" data-open="${i.id}">${dot}<span class="m"><span class="t">${esc(i.title)}</span>
     <span class="sub"><span class="id">${i.id}</span>${tags}<span class="w">${esc(i.where)}</span></span></span><span class="go" aria-hidden="true">‹</span></button>`;
 }
@@ -349,7 +351,7 @@ function ordered() {
   const out = [];
   [{ k: "first" }].concat(DATA.zones).forEach(z => {
     out.push(...all.filter(i => z.k === "first" ? pr(i.id) === "first" : i.zone === z.k && pr(i.id) !== "first")
-      .sort((a, b) => (RANK[pr(a.id)] - RANK[pr(b.id)]) || (b.urgent - a.urgent)));
+      .sort((a, b) => (RANK[pr(a.id)] - RANK[pr(b.id)]) || (urg(b) - urg(a))));
   });
   return out;
 }
@@ -397,7 +399,7 @@ function render() {
     any = true;
     const zd = zi.filter(i => st(i.id) === "done").length;
     const left = zi.length - zd;
-    vis.sort((a, b) => (RANK[pr(a.id)] - RANK[pr(b.id)]) || (b.urgent - a.urgent));
+    vis.sort((a, b) => (RANK[pr(a.id)] - RANK[pr(b.id)]) || (urg(b) - urg(a)));
     html += `<section class="zone${z.k === "first" ? " first" : ""}${closed[z.k] ? " closed" : ""}" data-z="${z.k}">
       <button class="zhead" data-zone="${z.k}" aria-expanded="${!closed[z.k]}"><h2>${z.name}</h2>
       <span class="zmeta">${left ? `נשארו ${left} מתוך ${zi.length}` : '<span class="ok">✓ הכל בוצע</span>'}<span class="chev"></span></span></button>
