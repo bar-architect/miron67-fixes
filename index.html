@@ -35,8 +35,6 @@ h1{font-size:16px;margin:0;font-weight:700;min-width:0}
 .vaad{font-size:14px;border-radius:8px;padding:6px 10px;background:var(--mark-soft);color:var(--ink)}
 .vaad b{color:var(--mark-ink)}
 .okbadge{background:var(--done-soft);color:var(--done);border-radius:6px;padding:1px 8px;font-weight:700}
-.first .zhead h2{color:var(--mark-ink)}
-.first .list{border-color:var(--mark);box-shadow:inset -3px 0 0 var(--mark)}
 .lowchip{background:var(--chip);color:var(--muted);border-radius:6px;padding:1px 8px}
 .firstchip{background:var(--mark-soft);color:var(--mark-ink);border-radius:6px;padding:1px 8px;font-weight:700}
 .skipnote{color:var(--muted);font-size:13px;text-align:center;margin-top:14px}
@@ -177,8 +175,8 @@ body.detail .filters,body.detail .send{display:none}
   <div class="intro" id="intro">
     <b>איך עובדים עם הרשימה</b>
     <ol>
-      <li>מתחילים ב<b>⭐ להתחיל כאן</b> – מה שהוועד ביקש קודם.</li>
-      <li>אחר כך לפי מקום בבניין, מהגג ועד החצר.</li>
+      <li>הרשימה מסודרת לפי מקום בבניין, מהגג ועד החצר.</li>
+      <li><b>⭐ עדיפות ועד</b> ליד ליקוי מסמן מה חשוב לוועד. הליקוי נשאר במקומו ברשימה.</li>
       <li>לוחצים על ליקוי כדי לראות מה לעשות, עם תמונות.</li>
       <li>גמרת? <b>✓ בוצע</b> ואז <b>הבא בתור</b>. משהו תקוע? <b>יש בעיה</b> וכותבים למה.</li>
     </ol>
@@ -295,7 +293,6 @@ const fmt = t => { if (!t) return ""; const d = new Date(t); return d.toLocaleDa
 
 function st(id) { return (state[id] && state[id].s) || "open"; }
 function pr(id) { return (vaad[id] && vaad[id].p) || "normal"; }
-const RANK = { first: 0, normal: 1, low: 2 };
 // urgent is set by the committee; until the sheet answers, fall back to the starting list
 function sup(i) { return !!(vaad[i.id] && vaad[i.id].x); }
 function urg(i) { const v = vaad[i.id]; return v && v.u !== undefined ? !!v.u : !!i.urgent; }
@@ -322,7 +319,7 @@ function cardHTML(i) {
     bottom = `<div class="actions"><button class="btn doneb" data-act="done" data-id="${i.id}">✓ בוצע</button><button class="btn issueb" data-act="issue" data-id="${i.id}">יש בעיה</button></div>`;
   }
   return `<article class="card${urg(i) ? " urgent" : ""}${s === "done" ? " isdone" : ""}" id="c-${i.id.replace(".", "-")}">
-    <div class="meta"><span class="id">${i.id}</span><span class="trade">${esc(i.trade)}</span>${pr(i.id) === "first" ? '<span class="firstchip">⭐ הוועד: קודם</span>' : ""}${pr(i.id) === "low" ? '<span class="lowchip">עדיפות נמוכה</span>' : ""}${urg(i) ? '<span class="hot">דחוף</span>' : ""}${sup(i) ? '<span class="supchip">🤝 תיאום ספק</span>' : ""}${s === "done" && vaad[i.id] && vaad[i.id].ok ? '<span class="okbadge">הוועד אישר ✓</span>' : ""}<span class="page">${i.page ? `עמ' ${i.page} בדוח` : "תוספת ועד, לא בדוח"}</span></div>
+    <div class="meta"><span class="id">${i.id}</span><span class="trade">${esc(i.trade)}</span>${pr(i.id) === "first" ? '<span class="firstchip">⭐ עדיפות ועד</span>' : ""}${pr(i.id) === "low" ? '<span class="lowchip">עדיפות נמוכה</span>' : ""}${urg(i) ? '<span class="hot">דחוף</span>' : ""}${sup(i) ? '<span class="supchip">🤝 תיאום ספק</span>' : ""}${s === "done" && vaad[i.id] && vaad[i.id].ok ? '<span class="okbadge">הוועד אישר ✓</span>' : ""}<span class="page">${i.page ? `עמ' ${i.page} בדוח` : "תוספת ועד, לא בדוח"}</span></div>
     <h3>${esc(i.title)}</h3>
     ${sup(i) ? `<div class="supnote">🤝 <b>צריך לתאם עם ספק חיצוני.</b> זה לא תיקון שאתה עושה בעצמך – לתאם, לוודא שבוצע, ואז לסמן בוצע.</div>` : ""}
     ${vaad[i.id] && vaad[i.id].note ? `<div class="vaad"><b>הערת הוועד:</b> ${esc(vaad[i.id].note)}</div>` : ""}
@@ -334,20 +331,15 @@ function cardHTML(i) {
 function rowHTML(i) {
   const s = st(i.id), p = pr(i.id), v = vaad[i.id] || {};
   const dot = s === "done" ? '<span class="dot done">✓</span>' : s === "issue" ? '<span class="dot issue">!</span>' : '<span class="dot"></span>';
-  const tags = (p === "first" && s !== "done" ? '<span class="tg first">⭐ קודם</span>' : "") + (p === "low" ? '<span class="tg low">נמוך</span>' : "") +
+  const tags = (p === "first" && s !== "done" ? '<span class="tg first">⭐ עדיפות ועד</span>' : "") + (p === "low" ? '<span class="tg low">נמוך</span>' : "") +
     (urg(i) && s !== "done" ? '<span class="tg hot">דחוף</span>' : "") + (sup(i) && s !== "done" ? '<span class="tg sup">🤝 תיאום ספק</span>' : "") + (v.note ? '<span class="tg vn">הערת ועד</span>' : "") + (s === "done" && v.ok ? '<span class="tg ok">אושר</span>' : "");
   return `<button class="ln${s === "done" ? " isdone" : ""}" data-open="${i.id}">${dot}<span class="m"><span class="t">${esc(i.title)}</span>
     <span class="sub"><span class="id">${i.id}</span>${tags}<span class="w">${esc(i.where)}</span></span></span><span class="go" aria-hidden="true">‹</span></button>`;
 }
-// same order the list shows: "start here" first, then by place; inside each, committee priority then urgency
+// same order the list shows: by place; committee tags never change the order
 function ordered() {
   const all = DATA.items.filter(i => pr(i.id) !== "skip" && (!trade || i.trade === trade));
-  const out = [];
-  [{ k: "first" }].concat(DATA.zones).forEach(z => {
-    out.push(...all.filter(i => z.k === "first" ? pr(i.id) === "first" : i.zone === z.k && pr(i.id) !== "first")
-      .sort((a, b) => (RANK[pr(a.id)] - RANK[pr(b.id)]) || (urg(b) - urg(a))));
-  });
-  return out;
+  return DATA.zones.flatMap(z => all.filter(i => i.zone === z.k));
 }
 let current = null;
 function openDetail(id) { location.hash = "d-" + id.replace(".", "-"); }
@@ -384,17 +376,15 @@ function render() {
   const skipped = DATA.items.filter(i => pr(i.id) === "skip").length;
   const all = DATA.items.filter(i => pr(i.id) !== "skip");
   let html = "", any = false;
-  const zones = [{ k: "first", name: "⭐ להתחיל כאן" }].concat(DATA.zones);
-  for (const z of zones) {
-    const zi = all.filter(i => (z.k === "first" ? pr(i.id) === "first" : i.zone === z.k && pr(i.id) !== "first") && (!trade || i.trade === trade));
+  for (const z of DATA.zones) {
+    const zi = all.filter(i => i.zone === z.k && (!trade || i.trade === trade));
     if (!zi.length) continue;
     const vis = zi.filter(visible);
     if (!vis.length && filter !== "all") continue;
     any = true;
     const zd = zi.filter(i => st(i.id) === "done").length;
     const left = zi.length - zd;
-    vis.sort((a, b) => (RANK[pr(a.id)] - RANK[pr(b.id)]) || (urg(b) - urg(a)));
-    html += `<section class="zone${z.k === "first" ? " first" : ""}${closed[z.k] ? " closed" : ""}" data-z="${z.k}">
+    html += `<section class="zone${closed[z.k] ? " closed" : ""}" data-z="${z.k}">
       <button class="zhead" data-zone="${z.k}" aria-expanded="${!closed[z.k]}"><h2>${z.name}</h2>
       <span class="zmeta">${left ? `נשארו ${left} מתוך ${zi.length}` : '<span class="ok">✓ הכל בוצע</span>'}<span class="chev"></span></span></button>
       <div class="list">${vis.map(rowHTML).join("")}</div></section>`;

@@ -131,7 +131,7 @@ h1{font-size:16px;margin:0}
       <button class="f" data-f="open" aria-pressed="false">נשאר</button>
       <button class="f" data-f="wait" aria-pressed="false">לאישורך</button>
       <button class="f" data-f="issue" aria-pressed="false">יש בעיה</button>
-      <button class="f" data-f="first" aria-pressed="false">⭐ קודם</button>
+      <button class="f" data-f="first" aria-pressed="false">⭐ עדיפות שלי</button>
       <button class="f" data-f="urgent" aria-pressed="false">🔴 דחוף</button>
       <button class="f" data-f="sup" aria-pressed="false">🤝 ספק</button>
       <button class="f" data-f="skip" aria-pressed="false">ויתרתי</button>
@@ -147,8 +147,8 @@ h1{font-size:16px;margin:0}
   <div class="tip" id="tip">
     <b>איך מכוונים את הקבלן</b>
     <ul>
-      <li><b>⭐</b> ליד ליקוי = הקבלן יראה אותו ראשון, בראש הרשימה שלו.</li>
-      <li>לוחצים על שורה כדי לפתוח פרטים: <b>סמן כדחוף</b> = תגית אדומה אצלו, <b>🤝 תיאום עם ספק</b> = תזכורת שזה לא תיקון שלו בשטח, <b>נמוך</b> = יופיע אצלו בסוף, <b>ויתור</b> = יורד מהרשימה שלו לגמרי.</li>
+      <li><b>⭐</b> ליד ליקוי = הקבלן יראה סימון "עדיפות ועד". הליקוי נשאר במקומו ברשימה שלו.</li>
+      <li>לוחצים על שורה כדי לפתוח פרטים: <b>סמן כדחוף</b> = תגית אדומה אצלו, <b>🤝 תיאום עם ספק</b> = תזכורת שזה לא תיקון שלו בשטח, <b>נמוך</b> = תגית "עדיפות נמוכה" אצלו, <b>ויתור</b> = יורד מהרשימה שלו לגמרי.</li>
       <li>כשהקבלן מסמן "בוצע", הליקוי מופיע ב<b>לאישורך</b>. בודקים בשטח ומאשרים, או מחזירים אליו עם הערה.</li>
     </ul>
     <button id="tipOk">הבנתי</button>
@@ -172,7 +172,7 @@ const SYNC_URL = "https://script.google.com/macros/s/AKfycbwJJ-Ejbe4_rFEGDzOstB0
 const KEY = "miron67-vaad-v1";
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const PN = { first: "⭐ קודם", normal: "רגיל", low: "נמוך", skip: "ויתור" };
+const PN = { first: "⭐ עדיפות", normal: "רגיל", low: "נמוך", skip: "ויתור" };
 const RANK = { first: 0, normal: 1, low: 2, skip: 3 };
 let srv = {}, group = "trade", filter = "all", open = null, adminKey = "";
 const ls = { get(k) { try { return localStorage.getItem(KEY + k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(KEY + k, v); } catch (e) {} } };
@@ -240,7 +240,7 @@ function rowHTML(i) {
   const s = S(i.id), p = P(i.id), ok = OK(i.id), r = srv[i.id] || {};
   const dot = p === "skip" ? '<span class="dot skip">–</span>' : s === "done" ? '<span class="dot done">✓</span>' : s === "issue" ? '<span class="dot issue">!</span>' : '<span class="dot"></span>';
   const tags = [
-    p === "first" ? '<span class="tag first">⭐ קודם</span>' : "",
+    p === "first" ? '<span class="tag first">⭐ עדיפות</span>' : "",
     p === "low" ? '<span class="tag low">נמוך</span>' : "",
     p === "skip" ? '<span class="tag low">ויתרתי</span>' : "",
     s === "done" && !ok && p !== "skip" ? '<span class="tag wait">לאישורך</span>' : "",
@@ -265,12 +265,12 @@ function rowHTML(i) {
         ${s === "done" ? `<button class="approve" data-act="ok" data-id="${i.id}" aria-pressed="${ok}">${ok ? "✓ אושר" : "אשר שבוצע"}</button>` : ""}
         <button data-act="reopen" data-id="${i.id}">החזר לקבלן</button></div>` : ""}
       <div class="lbl">הערה לקבלן (תופיע אצלו על הליקוי)</div>
-      <div class="vn"><textarea id="vn-${i.id.replace(".", "-")}" placeholder="למשל: להתחיל בזה לפני החורף">${esc(r.vnote || "")}</textarea><button data-act="vnote" data-id="${i.id}">שמור</button></div>
+      <div class="vn"><textarea id="vn-${i.id.replace(".", "-")}" placeholder="הנחיה לקבלן">${esc(r.vnote || "")}</textarea><button data-act="vnote" data-id="${i.id}">שמור</button></div>
     </div>`;
   }
   return `<div class="item${p === "skip" ? " skip" : ""}" id="r-${i.id.replace(".", "-")}">
     <div class="ln">${dot}<button class="main" data-open="${i.id}" aria-expanded="${open === i.id}"><span class="t">${esc(i.title)}</span><span class="sub">${sub}</span></button>
-    <button class="star" data-star="${i.id}" aria-pressed="${p === "first"}" aria-label="${p === "first" ? "בטל עדיפות" : "סמן כקודם"}">${p === "first" ? "★" : "☆"}</button></div>${det}</div>`;
+    <button class="star" data-star="${i.id}" aria-pressed="${p === "first"}" aria-label="${p === "first" ? "בטל עדיפות" : "סמן כעדיפות"}">${p === "first" ? "★" : "☆"}</button></div>${det}</div>`;
 }
 function render() {
   const all = DATA.items, act = all.filter(i => P(i.id) !== "skip");
