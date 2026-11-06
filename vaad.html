@@ -173,7 +173,6 @@ const KEY = "miron67-vaad-v1";
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const PN = { first: "⭐ עדיפות", normal: "רגיל", low: "נמוך", skip: "ויתור" };
-const RANK = { first: 0, normal: 1, low: 2, skip: 3 };
 let srv = {}, group = "trade", filter = "all", open = null, adminKey = "";
 const ls = { get(k) { try { return localStorage.getItem(KEY + k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(KEY + k, v); } catch (e) {} } };
 
@@ -283,7 +282,7 @@ function render() {
   let html = "";
   for (const k of keys) {
     const gi = all.filter(i => (group === "trade" ? i.trade : i.zone) === k);
-    const vis = gi.filter(matches).sort((a, b) => RANK[P(a.id)] - RANK[P(b.id)] || (URG(b) - URG(a)));
+    const vis = gi.filter(matches);
     if (!vis.length) continue;
     const ga = gi.filter(i => P(i.id) !== "skip"), gd = ga.filter(i => S(i.id) === "done").length;
     html += `<section class="group"><div class="ghead"><h2>${esc(group === "trade" ? k : DATA.zoneName[k])}</h2><span>${gd}/${ga.length} בוצעו</span></div>
