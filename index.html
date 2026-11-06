@@ -1,9 +1,9 @@
-<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style></head><body><title>מירון 67 – רשימת תיקונים</title>
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#ffffff"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style></head><body><title>מירון 67 – רשימת תיקונים</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
-/* Layout: one column field checklist — sticky progress header, zones in walking order (roof → floors → lobby → outside), one card per defect. */
+/* Layout: one column field checklist — slim sticky progress header, places in walking order (roof → floors → lobby → outside) opening one at a time, one page per defect with a fixed action bar. */
 :root{
   --bg:#eef0ee; --surface:#ffffff; --ink:#1d2321; --muted:#5d6763; --line:#d5dad7;
   --mark:#e39a2d; --mark-ink:#7a4a05; --mark-soft:#fbeed8;
@@ -24,121 +24,134 @@ button{cursor:pointer;touch-action:manipulation}
 
 /* header */
 header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
-header .wrap{padding-block:8px 8px;display:grid;gap:7px}
+header .wrap{padding-block:8px;display:grid;gap:6px}
 .top{display:flex;align-items:baseline;justify-content:space-between;gap:4px 12px;flex-wrap:wrap}
 h1{font-size:16px;margin:0;font-weight:700;min-width:0}
-.count{font-size:13px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.count{font-size:14px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
 .count b{color:var(--ink);font-size:17px}
-.sync{font-size:12px;color:var(--muted);margin-top:-4px}
+.sync{font-size:13px;color:var(--muted);margin-top:-2px}
 .sync[data-s="ok"]{color:var(--done)}
 .sync[data-s="wait"],.sync[data-s="offline"]{color:var(--mark-ink)}
-.vaad{font-size:14px;border-radius:8px;padding:6px 10px;background:var(--mark-soft);color:var(--ink)}
+.vaad{font-size:15px;border-radius:8px;padding:8px 10px;background:var(--mark-soft);color:var(--ink)}
 .vaad b{color:var(--mark-ink)}
 .okbadge{background:var(--done-soft);color:var(--done);border-radius:6px;padding:1px 8px;font-weight:700}
 .lowchip{background:var(--chip);color:var(--muted);border-radius:6px;padding:1px 8px}
 .firstchip{background:var(--mark-soft);color:var(--mark-ink);border-radius:6px;padding:1px 8px;font-weight:700}
 .skipnote{color:var(--muted);font-size:13px;text-align:center;margin-top:14px}
+.offline{color:var(--muted);font-size:13px;text-align:center;margin-top:10px}
 .bar{height:7px;border-radius:4px;background:var(--chip);overflow:hidden;display:flex}
 .bar i{display:block;height:100%;transition:width .3s}
 .bar .d{background:var(--done)} .bar .p{background:var(--issue)}
-.filters{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-inline:-2px;padding:2px}
-.filters::-webkit-scrollbar{display:none}
-.fbtn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;font-size:13px;white-space:nowrap;min-height:34px}
+
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.fbtn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 14px;font-size:14px;white-space:nowrap;min-height:42px}
 .fbtn[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
-select.fbtn{appearance:none;padding-inline:14px 30px;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:12px 15px,17px 15px;background-size:5px 5px;background-repeat:no-repeat}
+select.fbtn{width:100%;min-height:44px;font-size:16px;border-radius:12px;appearance:none;padding-inline:14px 30px;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:14px 19px,19px 19px;background-size:5px 5px;background-repeat:no-repeat}
 
 /* intro */
-.intro{margin:12px 0 0;padding:10px 12px;background:var(--mark-soft);border-radius:10px;font-size:14px;color:var(--ink);display:grid;gap:4px}
-.intro .ok{justify-self:start;border:0;background:var(--ink);color:var(--surface);border-radius:8px;padding:6px 14px;font-size:14px;font-weight:700;margin-top:4px}
+.intro{margin:12px 0 0;padding:10px 12px;background:var(--mark-soft);border-radius:10px;font-size:15px;color:var(--ink);display:grid;gap:4px}
+.intro .ok{justify-self:start;border:0;background:var(--ink);color:var(--surface);border-radius:8px;padding:8px 16px;font-size:15px;font-weight:700;margin-top:4px;min-height:44px}
 .intro b{color:var(--mark-ink)}
 .intro ol{margin:6px 0 0;padding-inline-start:20px}
 
-/* zones */
-.zone{margin-top:16px}
-.zhead{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:none;border:0;padding:4px 0 8px;text-align:right}
-.zhead h2{margin:0;font-size:17px;font-weight:700}
-.zmeta{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:8px}
+/* zones: one place at a time */
+.zone{margin-top:8px;scroll-margin-top:96px}
+.zhead{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-height:58px;text-align:right}
+.zhead.static{background:none;border:0;padding:10px 2px 6px;min-height:0}
+.zone:not(.closed) button.zhead{border-radius:12px 12px 0 0;border-bottom:0}
+.zone:not(.closed) button.zhead+.list{border-radius:0 0 12px 12px}
+.zhead h2{margin:0;font-size:17px;font-weight:700;line-height:1.3}
+.zmeta{flex:none;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px}
 .zmeta .ok{color:var(--done);font-weight:700}
-.chev{width:12px;height:12px;border-inline-start:2.5px solid var(--muted);border-bottom:2.5px solid var(--muted);transform:rotate(-45deg);transition:transform .2s;margin-top:-4px}
-.zone.closed .chev{transform:rotate(135deg);margin-top:4px}
-.zone.closed .list{display:none}
+.chev{display:grid;place-items:center;width:16px;transition:transform .15s ease-out}
+.zone:not(.closed) .chev{transform:rotate(180deg)}
 .list{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.ln{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:9px 10px;border-top:1px solid var(--line);width:100%;background:none;border-inline:0;border-bottom:0;text-align:right;cursor:pointer}
+.ln{display:grid;grid-template-columns:auto 1fr auto;align-items:start;gap:10px;padding:11px 10px;border-top:1px solid var(--line);width:100%;background:none;border-inline:0;border-bottom:0;text-align:right;cursor:pointer}
 .ln:first-child{border-top:0}
 .ln:active{background:var(--bg)}
 .ln .dot{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;border:2px solid var(--line);color:transparent}
 .ln .dot.done{background:var(--done);border-color:var(--done);color:#fff}
 .ln .dot.issue{background:var(--issue);border-color:var(--issue);color:#fff}
-.ln .m{min-width:0;display:grid;gap:1px}
-.ln .t{font-size:14.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ln .m{min-width:0;display:grid;gap:3px}
+.ln .t{font-size:15.5px;font-weight:500;line-height:1.35}
 .ln.isdone .t{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
-.ln .sub{font-size:11.5px;color:var(--muted);display:flex;gap:6px;align-items:center;overflow:hidden;white-space:nowrap}
-.ln .sub .w{overflow:hidden;text-overflow:ellipsis;min-width:0}
-.ln .sub .id{font-family:var(--f-mono);direction:ltr;flex:none}
-.ln .tg{flex:none;border-radius:5px;padding:0 6px;font-size:11px;font-weight:700}
+.ln .w{font-size:14px;color:var(--muted);line-height:1.35}
+.ln .sub{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.ln .sub .id{flex:none}
+.tg{flex:none;border-radius:5px;padding:0 7px;font-size:13px;font-weight:700;line-height:1.55}
 .tg.first{background:var(--mark-soft);color:var(--mark-ink)} .tg.low{background:var(--chip);color:var(--muted)}
 .tg.sup{background:#e3ecf7;color:#1f4f8a}
 .supchip{background:#e3ecf7;color:#1f4f8a;border-radius:6px;padding:1px 8px;font-weight:700}
-.supnote{background:#e3ecf7;color:#1d2321;border-radius:8px;padding:6px 10px;font-size:14px}
+.supnote{background:#e3ecf7;color:#1d2321;border-radius:8px;padding:8px 10px;font-size:15px}
 .tg.hot{background:var(--issue-soft);color:var(--issue)} .tg.vn{background:var(--mark-soft);color:var(--mark-ink)} .tg.ok{background:var(--done-soft);color:var(--done)}
-.ln .go{color:var(--muted);font-size:22px;line-height:1;padding-inline-end:2px}
+.ln .go{color:var(--muted);padding-top:4px}
 .dbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 8px}
-.back{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:500;min-height:38px}
-.pos{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
-.plbl{font-size:12px;color:var(--muted);margin-top:4px}
+.back{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:500;min-height:42px;display:inline-flex;align-items:center;gap:6px}
+.plbl{font-size:13px;color:var(--muted);margin-top:4px}
 .dphotos{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .dphotos button{border:0;padding:0;border-radius:8px;overflow:hidden;aspect-ratio:4/3;background:var(--chip);max-width:100%}
 .dphotos img{width:100%;height:100%;object-fit:cover;display:block}
-.dnav{display:grid;grid-template-columns:auto 1fr;gap:8px;margin:12px 0 4px}
-.dnav .btn{min-height:46px;min-width:0}
-.dnav .next{background:var(--ink);color:var(--surface);border-color:var(--ink);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;display:block;line-height:46px;padding:0 12px}
-.dnav .prev{font-size:14px;font-weight:500;color:var(--muted);padding:0 14px}
-body.detail .filters,body.detail .send{display:none}
+
+/* bottom action bar: the actions stay under the thumb, however long the page is */
+main.wrap{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+body.detail main.wrap{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+.abar{position:fixed;inset:auto 0 0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding-block:10px calc(10px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.abar .in{max-width:608px;margin:0 auto;display:grid;gap:8px}
+.abar .three{grid-template-columns:1fr .85fr 1.3fr}
+.abar .two{grid-template-columns:1fr 1fr}
+.abar .undoRow{grid-template-columns:auto 1fr}
+.abar .btn{min-height:52px;padding:0 8px;font-size:15px;min-width:0}
+.abar .btn.doneb{font-size:17px}
+.btn.primary.doneb{background:var(--done);border-color:var(--done);color:#fff}
+.btn.primary.nextb{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.nextb .ell{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.abar .nextb{gap:5px}
+.nextb svg{flex:none}
+@media (max-width:360px){.abar .nextb{font-size:13.5px;padding:0 4px}}
 
 /* card */
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 12px 10px;display:grid;gap:7px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 12px 12px;display:grid;gap:9px}
 .card.urgent{border-inline-start:5px solid var(--issue)}
-.meta{display:flex;flex-wrap:wrap;gap:5px;align-items:center;font-size:12px}
-.id{font-family:var(--f-mono);font-size:12px;background:var(--chip);border-radius:6px;padding:1px 7px;direction:ltr}
+.meta{display:flex;flex-wrap:wrap;gap:5px;align-items:center;font-size:13px}
+.id{font-family:var(--f-mono);font-size:13px;background:var(--chip);border-radius:6px;padding:1px 7px;direction:ltr}
 .trade{background:var(--chip);border-radius:6px;padding:1px 8px;color:var(--muted)}
 .hot{background:var(--issue-soft);color:var(--issue);border-radius:6px;padding:1px 8px;font-weight:700}
-.page{margin-inline-start:auto;color:var(--muted);font-size:11px}
-.card h3{margin:0;font-size:16px;line-height:1.35;font-weight:700;text-wrap:balance}
-.where{display:flex;gap:5px;align-items:flex-start;color:var(--mark-ink);font-weight:500;font-size:14px}
-.where svg{flex:none;margin-top:3px;width:12px;height:14px}
-.steps{margin:0;padding-inline-start:20px;display:grid;gap:2px;font-size:14.5px}
+.page{margin-inline-start:auto;color:var(--muted);font-size:13px}
+.card h3{margin:0;font-size:18px;line-height:1.35;font-weight:700;text-wrap:balance}
+.where{display:flex;gap:6px;align-items:flex-start;color:var(--mark-ink);font-weight:500;font-size:15px}
+.where svg{flex:none;margin-top:4px;width:12px;height:14px}
+.steps{margin:0;padding-inline-start:22px;display:grid;gap:6px;font-size:16px}
 .steps li::marker{color:var(--muted);font-weight:700}
-.photos{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px;scrollbar-width:thin}
-.photos button{flex:none;border:0;padding:0;border-radius:8px;overflow:hidden;width:108px;height:81px;background:var(--chip);scroll-snap-align:start;position:relative}
-.photos img{width:100%;height:100%;object-fit:cover;display:block}
-.photos .more{position:absolute;inset:0;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;font-weight:700;font-size:15px}
-.actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:2px}
 .btn{border-radius:10px;min-height:44px;font-size:16px;font-weight:700;border:2px solid var(--line);background:var(--surface);display:flex;align-items:center;justify-content:center;gap:8px;padding:0 16px}
 .btn.doneb{border-color:var(--done);color:var(--done)}
-.btn.issueb{font-size:14px;font-weight:500;color:var(--muted)}
+.btn.issueb{font-weight:500;color:var(--issue);border-color:var(--issue)}
+.btn:disabled{opacity:.45}
 .note{display:grid;gap:8px}
-.note textarea{width:100%;min-height:64px;border:1.5px solid var(--issue);border-radius:10px;padding:10px;background:var(--surface);font-size:16px;resize:vertical}
+.note label{font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 14px;font-size:15px;min-height:44px}
+.chip[aria-pressed="true"]{background:var(--issue);border-color:var(--issue);color:#fff}
+.note textarea{width:100%;min-height:64px;border:1.5px solid var(--line);border-radius:10px;padding:10px;background:var(--surface);font-size:16px;resize:vertical}
 .note .row{display:flex;gap:8px}
-.note .row .btn{min-height:40px;flex:1;font-size:15px}
-.status{display:flex;align-items:center;gap:8px;font-weight:700;border-radius:10px;padding:7px 10px;font-size:14px}
+.note .row .btn{min-height:48px;flex:1;font-size:15px}
+.status{display:flex;align-items:center;gap:8px;font-weight:700;border-radius:10px;padding:8px 10px;font-size:15px}
 .status.done{background:var(--done-soft);color:var(--done)}
 .status.issue{background:var(--issue-soft);color:var(--issue);flex-wrap:wrap}
-.status .when{font-weight:400;font-size:12px;opacity:.85}
-.status .undo{margin-inline-start:auto;background:none;border:0;text-decoration:underline;color:inherit;font-size:13px;padding:6px}
+.status .when{font-weight:400;font-size:13px;opacity:.85}
+.status .undo{margin-inline-start:auto;background:none;border:0;text-decoration:underline;color:inherit;font-size:14px;padding:6px;min-height:44px}
 .status .ntext{flex-basis:100%;font-weight:400;color:var(--ink)}
 .card.isdone{background:transparent}
-.card.isdone .steps,.card.isdone .photos,.card.isdone .where{display:none}
-.card.isdone h3{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px;font-size:15px}
+.card.isdone .steps,.card.isdone .where{display:none}
+.card.isdone h3{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px;font-size:16px}
 .empty{padding:28px 0;text-align:center;color:var(--muted)}
 
-/* send bar */
-.send{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding-top:8px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));margin-top:24px;margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px))}
-.send .btn{width:100%;background:var(--ink);color:var(--surface);border-color:var(--ink);min-height:42px;font-size:15px}
-.send small{display:block;text-align:center;color:var(--muted);font-size:13px;margin-top:6px}
-.sheet{margin-top:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:8px}
-.sheet textarea{width:100%;min-height:140px;border:1px solid var(--line);border-radius:8px;padding:8px;font-size:14px;background:var(--bg)}
-.sheet .row{display:flex;gap:8px}.sheet .row>*{flex:1}
-.sheet a.btn{text-decoration:none;background:#1f8f4e;color:#fff;border-color:#1f8f4e}
+/* touch: an instant response under the finger, and controls never select as text */
+button,select{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.btn,.fbtn,.back,.chip,.intro .ok{transition:transform .1s ease-out}
+.btn:active:not(:disabled),.fbtn:active,.back:active,.chip:active,.intro .ok:active{transform:scale(.97)}
+.zhead:active{background:var(--bg)}
+.dphotos button:active{opacity:.8}
 
 /* lightbox */
 .lb{position:fixed;inset:0;z-index:20;background:rgba(10,12,11,.96);display:grid;grid-template-rows:auto 1fr auto;color:#fff}
@@ -160,32 +173,33 @@ body.detail .filters,body.detail .send{display:none}
     </div>
     <div class="sync" id="sync" hidden></div>
     <div class="bar" aria-hidden="true"><i class="d" id="barD"></i><i class="p" id="barP"></i></div>
-    <div class="filters" role="group" aria-label="סינון">
-      <button class="fbtn" data-f="open" aria-pressed="true">נשאר לעשות</button>
-      <button class="fbtn" data-f="issue" aria-pressed="false">יש בעיה</button>
-      <button class="fbtn" data-f="done" aria-pressed="false">בוצע</button>
-      <button class="fbtn" data-f="all" aria-pressed="false">הכל</button>
-      <select class="fbtn" id="trade" aria-label="סינון לפי מקצוע"><option value="">כל המקצועות</option></select>
-    </div>
   </div>
 </header>
 
-<main class="wrap" style="padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))">
+<main class="wrap">
   <div id="listView">
   <div class="intro" id="intro">
     <b>איך עובדים עם הרשימה</b>
     <ol>
-      <li>הרשימה מסודרת לפי מקום בבניין, מהגג ועד החצר.</li>
-      <li><b>⭐ עדיפות ועד</b> ליד ליקוי מסמן מה חשוב לוועד. הליקוי נשאר במקומו ברשימה.</li>
-      <li>לוחצים על ליקוי כדי לראות מה לעשות, עם תמונות.</li>
-      <li>גמרת? <b>✓ בוצע</b> ואז <b>הבא בתור</b>. משהו תקוע? <b>יש בעיה</b> וכותבים למה.</li>
+      <li>בוחרים אזור בבניין ולוחצים על ליקוי כדי לראות מה לעשות.</li>
+      <li><b>⭐ עדיפות ועד</b> מסמן מה חשוב לוועד. הסדר לשיקולך.</li>
+      <li>גמרת? <b>✓ בוצע</b>. משהו תקוע? <b>יש בעיה</b>.</li>
     </ol>
     <button class="ok" id="introOk">הבנתי</button>
   </div>
+  <div class="filters" role="group" aria-label="סינון">
+    <button class="fbtn" data-f="open" aria-pressed="true">נשאר לעשות</button>
+    <button class="fbtn" data-f="issue" aria-pressed="false">יש בעיה</button>
+    <button class="fbtn" data-f="done" aria-pressed="false">בוצע</button>
+    <button class="fbtn" data-f="all" aria-pressed="false">הכל</button>
+    <select class="fbtn" id="trade" aria-label="סינון לפי מקצוע"><option value="">כל המקצועות</option></select>
+  </div>
   <div id="zones"></div>
+  <div class="offline" id="offline" hidden></div>
   </div>
   <div id="detail" hidden></div>
 </main>
+<div class="abar" id="abar" hidden></div>
 
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="תמונה מהדוח">
   <div class="lbtop"><span id="lbCap"></span><button class="x" id="lbX" aria-label="סגור">✕</button></div>
@@ -204,9 +218,9 @@ try { pending = JSON.parse(localStorage.getItem(KEY + "-pending") || "{}") || {}
 try { vaad = JSON.parse(localStorage.getItem(KEY + "-vaad") || "{}") || {}; } catch (e) {}
 const live = /^https?:\/\//.test(SYNC_URL);
 let syncState = live ? "loading" : "off";
-let filter = "open", trade = "", closed = {};
+let filter = "open", trade = "", openZone = "", noteOpen = false;
 const recent = new Set(); // marked in this visit: stay on screen so the tap has visible feedback
-try { closed = JSON.parse(localStorage.getItem(KEY + "-closed") || "{}") || {}; } catch (e) {}
+try { openZone = localStorage.getItem(KEY + "-zone") || ""; } catch (e) {}
 
 function persist() {
   try {
@@ -260,7 +274,7 @@ async function pull() {
       if (sv.s === "open") delete state[id];
       else state[id] = { s: sv.s, note: sv.note, t: sv.t };
     }
-    persist(); refresh();
+    persist(); if (!noteOpen) refresh(); // never wipe a note being typed
     if (Object.keys(pending).length) flush(); else setSync("ok");
   } catch (e) { setSync(Object.keys(pending).length ? "wait" : "offline"); }
 }
@@ -283,6 +297,10 @@ if (live) {
 }
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const chev = d => `<svg width="10" height="14" viewBox="0 0 10 14" aria-hidden="true"><path d="${d}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const chevL = chev("M8 1.5 2.5 7 8 12.5"), chevR = chev("M2 1.5 7.5 7 2 12.5");
+const chevD = '<svg width="14" height="10" viewBox="0 0 14 10" aria-hidden="true"><path d="M1.5 2 7 7.5 12.5 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const zoneName = Object.fromEntries(DATA.zones.map(z => [z.k, z.name]));
 const pin = '<svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true"><path d="M7 0C3.1 0 0 3 0 6.8 0 11.5 7 16 7 16s7-4.5 7-9.2C14 3 10.9 0 7 0zm0 9.3a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" fill="currentColor"/></svg>';
 const fmt = t => { if (!t) return ""; const d = new Date(t); return d.toLocaleDateString("he-IL", {day:"numeric", month:"numeric"}); };
 
@@ -290,6 +308,8 @@ const fmt = t => { if (!t) return ""; const d = new Date(t); return d.toLocaleDa
 [...new Set(DATA.items.map(i => i.trade))].sort((a,b)=>a.localeCompare(b,"he")).forEach(t => {
   const o = document.createElement("option"); o.value = t; o.textContent = t; $("#trade").appendChild(o);
 });
+// a link per trade: ?m=<trade> opens the list filtered to that trade
+(() => { const m = new URLSearchParams(location.search).get("m"); if (m && DATA.items.some(i => i.trade === m)) { trade = m; $("#trade").value = m; } })();
 
 function st(id) { return (state[id] && state[id].s) || "open"; }
 function pr(id) { return (vaad[id] && vaad[id].p) || "normal"; }
@@ -309,15 +329,9 @@ function cardHTML(i) {
   const ph = i.photos;
   const photos = ph.length ? `<div class="dphotos">${ph.map((p, n) =>
     `<button data-lb="${i.id}" data-n="${n}" aria-label="תמונה ${n+1} מתוך ${ph.length}"><img loading="lazy" src="${IMG}${p}" alt=""></button>`).join("")}</div>` : "";
-  let bottom;
-  if (s === "done") {
-    bottom = `<div class="status done">✓ בוצע <span class="when">${fmt(rec.t)}</span><button class="undo" data-act="undo" data-id="${i.id}">ביטול</button></div>`;
-  } else if (s === "issue") {
-    bottom = `<div class="status issue">⚠ יש בעיה <span class="when">${fmt(rec.t)}</span><button class="undo" data-act="undo" data-id="${i.id}">ביטול</button>${rec.note ? `<span class="ntext">${esc(rec.note)}</span>` : ""}</div>
-      <div class="actions"><button class="btn doneb" data-act="done" data-id="${i.id}">✓ בוצע</button></div>`;
-  } else {
-    bottom = `<div class="actions"><button class="btn doneb" data-act="done" data-id="${i.id}">✓ בוצע</button><button class="btn issueb" data-act="issue" data-id="${i.id}">יש בעיה</button></div>`;
-  }
+  let status = "";
+  if (s === "done") status = `<div class="status done">✓ בוצע <span class="when">${fmt(rec.t)}</span></div>`;
+  else if (s === "issue") status = `<div class="status issue">⚠ יש בעיה <span class="when">${fmt(rec.t)}</span><button class="undo" data-act="undo" data-id="${i.id}">ביטול</button>${rec.note ? `<span class="ntext">${esc(rec.note)}</span>` : ""}</div>`;
   return `<article class="card${urg(i) ? " urgent" : ""}${s === "done" ? " isdone" : ""}" id="c-${i.id.replace(".", "-")}">
     <div class="meta"><span class="id">${i.id}</span><span class="trade">${esc(i.trade)}</span>${pr(i.id) === "first" ? '<span class="firstchip">⭐ עדיפות ועד</span>' : ""}${pr(i.id) === "low" ? '<span class="lowchip">עדיפות נמוכה</span>' : ""}${urg(i) ? '<span class="hot">דחוף</span>' : ""}${sup(i) ? '<span class="supchip">🤝 תיאום ספק</span>' : ""}${s === "done" && vaad[i.id] && vaad[i.id].ok ? '<span class="okbadge">הוועד אישר ✓</span>' : ""}<span class="page">${i.page ? `עמ' ${i.page} בדוח` : "תוספת ועד, לא בדוח"}</span></div>
     <h3>${esc(i.title)}</h3>
@@ -325,32 +339,49 @@ function cardHTML(i) {
     ${vaad[i.id] && vaad[i.id].note ? `<div class="vaad"><b>הערת הוועד:</b> ${esc(vaad[i.id].note)}</div>` : ""}
     <div class="where">${pin}<span>${esc(i.where)}</span></div>
     <ol class="steps">${i.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
-    ${bottom}${photos ? `<div class="plbl">תמונות מהדוח (${ph.length}) – לחיצה מגדילה</div>` + photos : ""}</article>`;
+    ${status}<div id="noteslot"></div>${photos ? `<div class="plbl">תמונות מהדוח (${ph.length}) – לחיצה מגדילה</div>` + photos : ""}</article>`;
 }
 
+const plain = s => s.replace(/[:\s]/g, "");
 function rowHTML(i) {
   const s = st(i.id), p = pr(i.id), v = vaad[i.id] || {};
   const dot = s === "done" ? '<span class="dot done">✓</span>' : s === "issue" ? '<span class="dot issue">!</span>' : '<span class="dot"></span>';
   const tags = (p === "first" && s !== "done" ? '<span class="tg first">⭐ עדיפות ועד</span>' : "") + (p === "low" ? '<span class="tg low">נמוך</span>' : "") +
     (urg(i) && s !== "done" ? '<span class="tg hot">דחוף</span>' : "") + (sup(i) && s !== "done" ? '<span class="tg sup">🤝 תיאום ספק</span>' : "") + (v.note ? '<span class="tg vn">הערת ועד</span>' : "") + (s === "done" && v.ok ? '<span class="tg ok">אושר</span>' : "");
+  // the place is shown only when it adds something to the zone title above it
+  const where = plain(i.where) === plain(zoneName[i.zone]) ? "" : `<span class="w">${esc(i.where)}</span>`;
   return `<button class="ln${s === "done" ? " isdone" : ""}" data-open="${i.id}">${dot}<span class="m"><span class="t">${esc(i.title)}</span>
-    <span class="sub"><span class="id">${i.id}</span>${tags}<span class="w">${esc(i.where)}</span></span></span><span class="go" aria-hidden="true">‹</span></button>`;
+    ${where}<span class="sub"><span class="id">${i.id}</span>${tags}</span></span><span class="go" aria-hidden="true">${chevL}</span></button>`;
 }
 // same order the list shows: by place; committee tags never change the order
 function ordered() {
   const all = DATA.items.filter(i => pr(i.id) !== "skip" && (!trade || i.trade === trade));
   return DATA.zones.flatMap(z => all.filter(i => i.zone === z.k));
 }
-let current = null;
+let current = null, lastDetail = null;
 function openDetail(id) { location.hash = "d-" + id.replace(".", "-"); }
 function route() {
   const m = location.hash.match(/^#d-(\d+)-(\d+)$/);
   const id = m ? m[1] + "." + m[2] : null;
   current = id && DATA.items.some(i => i.id === id) ? id : null;
+  noteOpen = false;
   document.body.classList.toggle("detail", !!current);
-  $("#listView").hidden = !!current; $("#detail").hidden = !current;
-  if (current) { renderDetail(); window.scrollTo(0, 0); }
-  else { render(); if (route.y) { window.scrollTo(0, route.y); route.y = 0; } }
+  $("#listView").hidden = !!current; $("#detail").hidden = !current; $("#abar").hidden = !current;
+  if (current) { lastDetail = current; renderDetail(); window.scrollTo(0, 0); return; }
+  // back on the list: reopen the place you were working in, at the defect you came from
+  if (lastDetail) { const it = DATA.items.find(i => i.id === lastDetail); if (it) setZone(it.zone); }
+  render();
+  if (lastDetail) { const el = document.querySelector(`.ln[data-open="${lastDetail}"]`); if (el) el.scrollIntoView({ block: "center" }); lastDetail = null; }
+}
+function barHTML(i, next) {
+  const s = st(i.id);
+  const nextBtn = (primary, long) => next
+    ? `<button class="btn nextb${primary ? " primary" : ""}" data-open="${next.id}" aria-label="הליקוי הבא: ${esc(next.title)}"><span class="ell">${long ? "הליקוי הבא: " + esc(next.title) : "הליקוי הבא"}</span>${chevL}</button>`
+    : `<button class="btn nextb${primary ? " primary" : ""}" data-back>${s === "done" ? "✓ סיימת הכל, לרשימה" : "לרשימה"}</button>`;
+  const doneBtn = `<button class="btn doneb primary" data-act="done" data-id="${i.id}">✓ בוצע</button>`;
+  if (s === "done") return `<div class="in undoRow"><button class="btn" data-act="undo" data-id="${i.id}">ביטול</button>${nextBtn(true, true)}</div>`;
+  if (s === "issue") return `<div class="in two">${doneBtn}${nextBtn(false, false)}</div>`;
+  return `<div class="in three">${doneBtn}<button class="btn issueb" data-act="issue" data-id="${i.id}">יש בעיה</button>${nextBtn(false, false)}</div>`;
 }
 function renderDetail() {
   const i = DATA.items.find(x => x.id === current); if (!i) return;
@@ -359,35 +390,44 @@ function renderDetail() {
   const idx = list.findIndex(x => x.id === current);
   const next = list.slice(idx + 1).find(x => st(x.id) !== "done") || open.find(x => x.id !== current);
   const prev = idx > 0 ? list[idx - 1] : null;
-  $("#detail").innerHTML = `<div class="dbar"><button class="back" data-back>→ לרשימה</button><span class="pos">נשארו ${open.length} ליקויים</span></div>
-    ${cardHTML(i)}
-    <div class="dnav">${prev ? `<button class="btn prev" data-open="${prev.id}">‹ הקודם</button>` : "<span></span>"}${next ? `<button class="btn next" data-open="${next.id}">הבא בתור: ${esc(next.title)} ›</button>` : `<button class="btn next" data-back>✓ סיימת הכל – חזרה לרשימה</button>`}</div>`;
+  $("#detail").innerHTML = `<div class="dbar"><button class="back" data-back>→ לרשימה</button>${prev ? `<button class="back" data-open="${prev.id}">${chevR} הקודם</button>` : ""}</div>
+    ${cardHTML(i)}`;
+  $("#abar").innerHTML = barHTML(i, next);
+  $("#abar").hidden = false;
 }
 function refresh() { if (current) renderDetail(); else render(); }
 
 function header() {
-  const all = DATA.items.filter(i => pr(i.id) !== "skip"), done = all.filter(i => st(i.id) === "done").length, iss = all.filter(i => st(i.id) === "issue").length;
-  $("#count").innerHTML = `נשארו <b>${all.length - done}</b> מתוך ${all.length}`;
-  $("#barD").style.width = (done / all.length * 100) + "%";
-  $("#barP").style.width = (iss / all.length * 100) + "%";
+  const all = DATA.items.filter(i => pr(i.id) !== "skip" && (!trade || i.trade === trade)), done = all.filter(i => st(i.id) === "done").length, iss = all.filter(i => st(i.id) === "issue").length;
+  $("#count").innerHTML = `נשארו <b>${all.length - done}</b> מתוך ${all.length}${trade ? " · " + esc(trade) : ""}`;
+  $("#barD").style.width = (all.length ? done / all.length * 100 : 0) + "%";
+  $("#barP").style.width = (all.length ? iss / all.length * 100 : 0) + "%";
 }
+function setZone(k) { openZone = k; try { localStorage.setItem(KEY + "-zone", k || ""); } catch (e) {} }
 function render() {
   header();
   const skipped = DATA.items.filter(i => pr(i.id) === "skip").length;
   const all = DATA.items.filter(i => pr(i.id) !== "skip");
-  let html = "", any = false;
+  const mine = all.filter(i => !trade || i.trade === trade);
+  const nDone = mine.filter(i => st(i.id) === "done").length, nIssue = mine.filter(i => st(i.id) === "issue").length;
+  $('.fbtn[data-f="open"]').textContent = `נשאר לעשות (${mine.length - nDone})`;
+  $('.fbtn[data-f="issue"]').textContent = nIssue ? `יש בעיה (${nIssue})` : "יש בעיה";
+  $('.fbtn[data-f="done"]').textContent = nDone ? `בוצע (${nDone})` : "בוצע";
+  // a short filtered list shows everything; the full list opens one place at a time
+  const accordion = filter === "open" && !trade;
+  let html = accordion && mine.length && nDone === mine.length ? `<div class="empty">אין יותר ליקויים פתוחים. כל הכבוד!</div>` : "", any = false;
   for (const z of DATA.zones) {
     const zi = all.filter(i => i.zone === z.k && (!trade || i.trade === trade));
     if (!zi.length) continue;
-    const vis = zi.filter(visible);
-    if (!vis.length && filter !== "all") continue;
+    let vis = zi.filter(visible);
+    if (!vis.length) { if (!accordion) continue; vis = zi; }
     any = true;
-    const zd = zi.filter(i => st(i.id) === "done").length;
-    const left = zi.length - zd;
-    html += `<section class="zone${closed[z.k] ? " closed" : ""}" data-z="${z.k}">
-      <button class="zhead" data-zone="${z.k}" aria-expanded="${!closed[z.k]}"><h2>${z.name}</h2>
-      <span class="zmeta">${left ? `נשארו ${left} מתוך ${zi.length}` : '<span class="ok">✓ הכל בוצע</span>'}<span class="chev"></span></span></button>
-      <div class="list">${vis.map(rowHTML).join("")}</div></section>`;
+    const left = zi.filter(i => st(i.id) !== "done");
+    const isOpen = !accordion || openZone === z.k;
+    const nFirst = left.filter(i => pr(i.id) === "first").length, nUrg = left.filter(urg).length;
+    const meta = `<span class="zmeta">${nFirst ? `<span class="tg first">⭐ ${nFirst}</span>` : ""}${nUrg ? `<span class="tg hot">דחוף ${nUrg}</span>` : ""}${left.length ? `נשארו ${left.length}` : '<span class="ok">✓ הכל בוצע</span>'}${accordion ? `<span class="chev">${chevD}</span>` : ""}</span>`;
+    const head = accordion ? `<button class="zhead" data-zone="${z.k}" aria-expanded="${isOpen}"><h2>${z.name}</h2>${meta}</button>` : `<div class="zhead static"><h2>${z.name}</h2>${meta}</div>`;
+    html += `<section class="zone${isOpen ? "" : " closed"}" data-z="${z.k}">${head}${isOpen ? `<div class="list">${vis.map(rowHTML).join("")}</div>` : ""}</section>`;
   }
   if (skipped) html += `<div class="skipnote">הוועד ויתר על ${skipped} ליקויים – הם לא מופיעים ברשימה.</div>`;
   if (!any) html = `<div class="empty">${filter === "open" ? "אין יותר ליקויים פתוחים. כל הכבוד!" : "אין ליקויים במצב הזה."}</div>` + (skipped ? `<div class="skipnote">הוועד ויתר על ${skipped} ליקויים.</div>` : "");
@@ -398,34 +438,50 @@ document.addEventListener("click", e => {
   const f = e.target.closest(".fbtn[data-f]");
   if (f) { filter = f.dataset.f; recent.clear(); document.querySelectorAll(".fbtn[data-f]").forEach(b => b.setAttribute("aria-pressed", b === f)); render(); return; }
   const op = e.target.closest("[data-open]");
-  if (op) { if (!current) route.y = window.scrollY; openDetail(op.dataset.open); return; }
+  if (op) { openDetail(op.dataset.open); return; }
   if (e.target.closest("[data-back]")) { location.hash = ""; return; }
-  const zh = e.target.closest(".zhead");
-  if (zh) { const k = zh.dataset.zone; closed[k] = !closed[k]; try { localStorage.setItem(KEY + "-closed", JSON.stringify(closed)); } catch (err) {} render(); return; }
+  const zh = e.target.closest("button.zhead");
+  if (zh) {
+    const k = zh.dataset.zone; setZone(openZone === k ? "" : k); render();
+    if (openZone) { const el = document.querySelector(`.zone[data-z="${k}"]`); if (el) el.scrollIntoView({ block: "start" }); }
+    return;
+  }
+  const c = e.target.closest("[data-chip]");
+  if (c) { c.setAttribute("aria-pressed", c.getAttribute("aria-pressed") !== "true"); noteReady(); return; }
   const a = e.target.closest("[data-act]");
   if (a) {
     const id = a.dataset.id, act = a.dataset.act;
-    if (act === "done") { state[id] = { s: "done", t: Date.now() }; recent.add(id); save(id); refresh(); }
-    else if (act === "undo") { delete state[id]; save(id); refresh(); }
-    else if (act === "issue") { openNote(a.closest(".card"), id); }
+    if (act === "done") { noteOpen = false; state[id] = { s: "done", t: Date.now() }; recent.add(id); save(id); refresh(); }
+    else if (act === "undo") { noteOpen = false; delete state[id]; save(id); refresh(); }
+    else if (act === "issue") { openNote(id); }
     else if (act === "saveNote") {
-      const txt = a.closest(".note").querySelector("textarea").value.trim();
-      state[id] = { s: "issue", t: Date.now(), note: txt }; save(id); refresh();
-    } else if (act === "cancelNote") { refresh(); }
+      const txt = noteText(); if (!txt) return;
+      noteOpen = false; state[id] = { s: "issue", t: Date.now(), note: txt }; save(id); refresh();
+    } else if (act === "cancelNote") { noteOpen = false; refresh(); }
     return;
   }
   const p = e.target.closest("[data-lb]");
   if (p) openLB(p.dataset.lb, +p.dataset.n);
 });
+document.addEventListener("input", e => { if (e.target.id === "noteTxt") noteReady(); });
 $("#trade").addEventListener("change", e => { trade = e.target.value; refresh(); });
 
-function openNote(card, id) {
-  const acts = card.querySelector(".actions");
-  const div = document.createElement("div"); div.className = "note";
-  div.innerHTML = `<label for="n-${id}" style="font-weight:700">מה הבעיה?</label>
-    <textarea id="n-${id}" placeholder="למשל: חסר חומר / צריך לתאם עם דייר / לא מסכים לסעיף"></textarea>
-    <div class="row"><button class="btn" style="border-color:var(--issue);color:var(--issue)" data-act="saveNote" data-id="${id}">שמור</button><button class="btn" data-act="cancelNote">ביטול</button></div>`;
-  acts.replaceWith(div); div.querySelector("textarea").focus();
+const REASONS = ["חסר חומר", "צריך תיאום", "אין גישה", "לא מסכים לסעיף"];
+function noteText() {
+  const chips = [...document.querySelectorAll('[data-chip][aria-pressed="true"]')].map(b => b.dataset.chip).join(", ");
+  const txt = ($("#noteTxt") || {}).value ? $("#noteTxt").value.trim() : "";
+  return chips && txt ? chips + ": " + txt : chips || txt;
+}
+function noteReady() { const b = $('[data-act="saveNote"]'); if (b) b.disabled = !noteText(); }
+function openNote(id) {
+  noteOpen = true;
+  $("#abar").hidden = true;
+  const slot = $("#noteslot");
+  slot.innerHTML = `<div class="note"><label for="noteTxt">מה הבעיה?</label>
+    <div class="chips">${REASONS.map(r => `<button class="chip" data-chip="${r}" aria-pressed="false">${r}</button>`).join("")}</div>
+    <textarea id="noteTxt" placeholder="אפשר להוסיף פרטים"></textarea>
+    <div class="row"><button class="btn issueb" data-act="saveNote" data-id="${id}" disabled>שמור</button><button class="btn" data-act="cancelNote">ביטול</button></div></div>`;
+  slot.scrollIntoView({ block: "center" });
 }
 
 // lightbox
@@ -453,5 +509,43 @@ window.addEventListener("hashchange", route);
 route();
 setSync(syncState);
 pull();
+
+// ---- works with no reception: the page and all the photos stay on the phone ----
+async function keepOffline() {
+  if (!("serviceWorker" in navigator) || !("caches" in window)) return;
+  const el = $("#offline");
+  try {
+    await navigator.serviceWorker.register("sw.js");
+    await navigator.serviceWorker.ready;
+  } catch (e) { return; }
+  try {
+    const page = await fetch(location.pathname, { cache: "no-cache" });
+    if (page.ok) await (await caches.open("miron-pages-v1")).put(location.pathname, page);
+  } catch (e) {}
+  try {
+    const imgs = await caches.open("miron-img-v1");
+    const have = new Set((await imgs.keys()).map(r => new URL(r.url).pathname.split("/").pop()));
+    const files = [...new Set(DATA.items.flatMap(i => i.photos))];
+    const todo = files.filter(f => !have.has(f));
+    let got = files.length - todo.length, failed = false;
+    const show = () => {
+      el.hidden = false;
+      el.textContent = got >= files.length ? "✓ הרשימה והתמונות שמורות בטלפון. אפשר לעבוד גם בלי קליטה."
+        : failed ? `נשמרו ${got} מתוך ${files.length} תמונות. השאר יישמרו כשתהיה קליטה.`
+        : `שומר תמונות בטלפון לעבודה בלי קליטה: ${got} מתוך ${files.length}`;
+    };
+    show();
+    if (navigator.connection && navigator.connection.saveData) return;
+    const worker = async () => {
+      while (todo.length && !failed) {
+        const u = new URL(IMG + todo.shift(), location.href).href;
+        try { const r = await fetch(u); if (r.ok) { await imgs.put(u, r); got++; show(); } }
+        catch (e) { failed = true; show(); }
+      }
+    };
+    await Promise.all([worker(), worker(), worker()]);
+  } catch (e) {}
+}
+window.addEventListener("load", () => setTimeout(keepOffline, 1500));
 </script>
 </body></html>
